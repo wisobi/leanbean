@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/jquery-ui-1.11.1.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+    <script src="js/vendor/modernizr-2.6.2.min.js"></script>
+    <style>
+        body {
+            min-width: 520px;
+        }
+
+        .column {
+            background-color: #e3e3e3;
+            width: 220px;
+            float: left;
+            padding-bottom: 100px;
+        }
+
+        .portlet {
+            margin: 0 1em 1em 0;
+            padding: 0.3em;
+            font-size: 0.8em;
+        }
+
+        .portlet-header {
+            padding: 0.2em 0.3em;
+            margin-bottom: 0.5em;
+            position: relative;
+        }
+
+        .portlet-toggle {
+            position: absolute;
+            top: 50%;
+            right: 0;
+            margin-top: -8px;
+        }
+
+        .portlet-content {
+            display: none;
+            padding: 0.4em;
+        }
+
+        .portlet-placeholder {
+            background-color: #c0c0c0;
+            border: 1px dotted black;
+            margin: 0 1em 1em 0;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a
+        href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<!-- Add your site or application content here -->
+<img src="img/leanbean.png" width="200" height="175">
+
+<p class="meeting-id"></p>
+
+<div id="meeting_container">
+    <div id="meeting_header"></div>
+    <!--
+        <div class="column">
+            <div class="portlet">
+                <div class="portlet-header">This is a topic that is too long for the width</div>
+                <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                    elit
+                </div>
+            </div>
+            <div class="portlet">
+                <div class="portlet-header">News</div>
+                <div class="portlet-content">Lorem ipsum dolor sit amet, consectetuer adipiscing
+                    elit
+                </div>
+            </div>
+        </div>
+        -->
+    <div class="column" id="topics_container">
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>window.jQuery
+|| document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+<!-- Insert your own scripts below -->
+<script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $(".column").sortable({
+                                  connectWith: ".column",
+                                  handle: ".portlet-header",
+                                  cancel: ".portlet-toggle",
+                                  placeholder: "portlet-placeholder ui-corner-all"
+                              });
+
+        $(".portlet")
+                .addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
+                .find(".portlet-header")
+                .addClass("ui-corner-all")
+                .prepend("<span class='ui-icon ui-icon-triangle-1-s portlet-toggle'></span>");
+
+        $(".portlet-toggle").click(function () {
+            var icon = $(this);
+            icon.toggleClass("ui-icon-triangle-1-n ui-icon-triangle-1-s");
+            icon.closest(".portlet").find(".portlet-content").toggle();
+        });
+    });
+</script>
+
+<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+<script>
+    (function (b, o, i, l, e, r) {
+        b.GoogleAnalyticsObject = l;
+        b[l] || (b[l] =
+                 function () {
+                     (b[l].q = b[l].q || []).push(arguments)
+                 });
+        b[l].l = +new Date;
+        e = o.createElement(i);
+        r = o.getElementsByTagName(i)[0];
+        e.src = '//www.google-analytics.com/analytics.js';
+        r.parentNode.insertBefore(e, r)
+    }(window, document, 'script', 'ga'));
+    ga('create', 'UA-XXXXX-X');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>

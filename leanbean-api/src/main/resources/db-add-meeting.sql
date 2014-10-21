@@ -1,0 +1,1 @@
+insert into leanbean.meeting (id, title, user_id) values

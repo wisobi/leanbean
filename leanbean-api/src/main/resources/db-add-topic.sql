@@ -1,0 +1,1 @@
+insert into leanbean.topic (meeting_id, user_id, title, pitch) values (?,?,?,?);
