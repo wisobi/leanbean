@@ -1,6 +1,8 @@
 package com.wisobi.leanbean.restlet.resource;
 
 import com.wisobi.leanbean.LeanBeanDao;
+import com.wisobi.leanbean.dto.DTO2DAOMapper;
+import com.wisobi.leanbean.dto.TopicDTO;
 import com.wisobi.leanbean.jpa.LeanBeanJpaDao;
 import com.wisobi.leanbean.jpa.entity.Topic;
 
@@ -17,8 +19,8 @@ public class TopicResource extends ServerResource {
   private LeanBeanDao dao = new LeanBeanJpaDao();
 
   @Post("json")
-  public void addTopic(Topic topic) {
-
+  public void addTopic(TopicDTO topicDTO) {
+    Topic topic = DTO2DAOMapper.mapTopic(topicDTO);
     try {
       dao.addTopic(topic);
       getResponse().setStatus(Status.SUCCESS_CREATED);

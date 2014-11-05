@@ -1,6 +1,8 @@
 package com.wisobi.leanbean.restlet.resource;
 
 import com.wisobi.leanbean.LeanBeanDao;
+import com.wisobi.leanbean.dto.DTO2DAOMapper;
+import com.wisobi.leanbean.dto.MeetingDTO;
 import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.LeanBeanJpaDao;
 
@@ -23,7 +25,8 @@ public class MeetingResource extends ServerResource {
   }
 
   @Post("json")
-  public void addMeeting(Meeting meeting) {
+  public void addMeeting(MeetingDTO meetingDTO) {
+    Meeting meeting = DTO2DAOMapper.mapMeeting(meetingDTO);
     try {
       dao.addMeeting(meeting);
     } catch (Exception e) {

@@ -1,6 +1,8 @@
 package com.wisobi.leanbean.restlet.resource;
 
 import com.wisobi.leanbean.LeanBeanDao;
+import com.wisobi.leanbean.dto.DTO2DAOMapper;
+import com.wisobi.leanbean.dto.VoteDTO;
 import com.wisobi.leanbean.jpa.LeanBeanJpaDao;
 import com.wisobi.leanbean.jpa.entity.Vote;
 
@@ -17,7 +19,8 @@ public class VoteResource extends ServerResource {
   private LeanBeanDao dao = new LeanBeanJpaDao();
 
   @Post("json")
-  public void addTopic(Vote vote) {
+  public void addTopic(VoteDTO voteDTO) {
+    Vote vote = DTO2DAOMapper.mapVote(voteDTO);
     try {
       dao.addVote(vote);
       getResponse().setStatus(Status.SUCCESS_CREATED);
