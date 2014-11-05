@@ -1,6 +1,9 @@
 package com.wisobi.leanbean.restlet;
 
 import com.wisobi.leanbean.restlet.resource.MeetingResource;
+import com.wisobi.leanbean.restlet.resource.TopicResource;
+import com.wisobi.leanbean.restlet.resource.UserResource;
+import com.wisobi.leanbean.restlet.resource.VoteResource;
 
 import org.restlet.Application;
 import org.restlet.Component;
@@ -19,8 +22,11 @@ public class LeanBeanApplication extends Application {
   @Override
   public Restlet createInboundRoot() {
     Router router = new Router(getContext());
-    router.attach("/v1/meetings/", MeetingResource.class);
-    router.attach("/v1/meetings/{meeting}", MeetingResource.class);
+    router.attach("/v1/meeting/", MeetingResource.class);
+    router.attach("/v1/meeting/{meeting-id}", MeetingResource.class);
+    router.attach("/v1/user/", UserResource.class);
+    router.attach("/v1/topic/", TopicResource.class);
+    router.attach("/v1/vote/", VoteResource.class);
     router.attach("/v1/bootstrap", LeanBeanBootstrap.class);
     return router;
   }
