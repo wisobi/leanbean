@@ -11,7 +11,7 @@
         <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
         <init-param>
             <param-name>org.restlet.application</param-name>
-            <param-value>com.wisobi.leanbean.LeanBeanApplication</param-value>
+            <param-value>com.wisobi.leanbean.restlet.LeanBeanApplication</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

@@ -1,10 +1,10 @@
 package com.wisobi.leanbean.mysql;
 
 import com.wisobi.leanbean.LeanBeanDao;
-import com.wisobi.leanbean.entity.Meeting;
-import com.wisobi.leanbean.entity.Topic;
-import com.wisobi.leanbean.entity.User;
-import com.wisobi.leanbean.entity.Vote;
+import com.wisobi.leanbean.jpa.entity.Meeting;
+import com.wisobi.leanbean.jpa.entity.Topic;
+import com.wisobi.leanbean.jpa.entity.User;
+import com.wisobi.leanbean.jpa.entity.Vote;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +15,11 @@ import java.sql.SQLException;
  * Created by bjork on 27/08/14.
  */
 public class LeanBeanMysqlDao implements LeanBeanDao {
+
+  @Override
+  public void close() throws Exception {
+
+  }
 
   @Override
   public Meeting findByMeetingId(long meetingId) {
@@ -131,6 +136,11 @@ public class LeanBeanMysqlDao implements LeanBeanDao {
     vote.setUser(user);
 
     return vote;
+  }
+
+  @Override
+  public Topic findByTopicId(long topicId) {
+    return null;
   }
 
   @Override

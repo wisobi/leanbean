@@ -4,10 +4,10 @@
              version="2.0">
     <persistence-unit name="leanbean" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>com.wisobi.leanbean.entity.Meeting</class>
-        <class>com.wisobi.leanbean.entity.Topic</class>
-        <class>com.wisobi.leanbean.entity.User</class>
-        <class>com.wisobi.leanbean.entity.Vote</class>
+        <class>com.wisobi.leanbean.jpa.entity.Meeting</class>
+        <class>com.wisobi.leanbean.jpa.entity.Topic</class>
+        <class>com.wisobi.leanbean.jpa.entity.User</class>
+        <class>com.wisobi.leanbean.jpa.entity.Vote</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
             <property name="hibernate.hbm2ddl.auto" value="create-drop" />

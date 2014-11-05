@@ -1,12 +1,13 @@
 package com.wisobi.leanbean;
 
-import com.wisobi.leanbean.entity.Meeting;
-import com.wisobi.leanbean.entity.Topic;
-import com.wisobi.leanbean.entity.User;
-import com.wisobi.leanbean.entity.Vote;
 import com.wisobi.leanbean.jpa.LeanBeanJpaDao;
+import com.wisobi.leanbean.jpa.entity.Meeting;
+import com.wisobi.leanbean.jpa.entity.Topic;
+import com.wisobi.leanbean.jpa.entity.User;
+import com.wisobi.leanbean.jpa.entity.Vote;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -15,21 +16,23 @@ import org.slf4j.LoggerFactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-
+import static org.junit.Assert.assertTrue;
 
 public class LeanBeanDaoTest {
 
   final static Logger logger = LoggerFactory.getLogger(LeanBeanDaoTest.class);
 
-  private static LeanBeanDao dao = new LeanBeanJpaDao();
+  private static LeanBeanDao dao;
 
-  @After
-  public void tearDown() throws Exception {
-
+  @AfterClass
+  public static void closeDao() throws Exception {
+    dao.close();
   }
 
   @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
+  public static void initDao() throws Exception {
+
+    dao = new LeanBeanJpaDao();
 
     User user1 = new User();
     user1.setName("Alice");
@@ -108,8 +111,20 @@ public class LeanBeanDaoTest {
 
   }
 
+  @After
+  public void tearDown() throws Exception {
+
+  }
+
   @Test
-  public void testSortedTopics() throws Exception {
+  public void testNumTopics() {
+    Meeting meeting = dao.findByMeetingId(1);
+    int numTopics = meeting.getTopics().size();
+    assertEquals(5, numTopics);
+  }
+
+  @Test
+  public void testSortedTopics() {
     Meeting meeting = dao.findByMeetingId(1);
     int numVotesPrev = Integer.MAX_VALUE;
     int numVotes = 0;
@@ -124,7 +139,7 @@ public class LeanBeanDaoTest {
   }
 
   @Test
-  public void testTopicWithoutVotes() throws Exception {
+  public void testTopicWithoutVotes() {
     Meeting meeting = dao.findByMeetingId(2);
     Topic topic = meeting.getTopics().iterator().next();
     logger.debug("Topic Id: " + topic.getId() + ", votes: " + topic.getVotes());
@@ -132,7 +147,7 @@ public class LeanBeanDaoTest {
   }
 
   @Test
-  public void testMeetingUser() throws Exception {
+  public void testMeetingUser() {
     Meeting meeting = dao.findByMeetingId(1);
     User user = meeting.getUser();
     logger.debug("Meeting Id: " + meeting.getId() + ", user: " + user.getName());
@@ -141,24 +156,196 @@ public class LeanBeanDaoTest {
   }
 
   @Test
-  public void testTopicUser() throws Exception {
+  public void testTopicUser() {
     Meeting meeting = dao.findByMeetingId(1);
-    Topic topic = meeting.getTopics().iterator().next();
-    User user = topic.getUser();
-    logger.debug("Topic Id: " + topic.getId() + ", user: " + user.getName());
-    assertNotNull(user);
-    assertEquals("Bob", user.getName());
+    boolean tested = false;
+    for (Topic topic : meeting.getTopics()) {
+      if (topic.getId() == 1) {
+        User user = topic.getUser();
+        logger.debug("Topic Id: " + topic.getId() + ", user: " + user.getName());
+        assertNotNull(user);
+        assertEquals("Alice", user.getName());
+        tested = true;
+      }
+    }
+    assertTrue(tested);
   }
 
   @Test
-  public void testVoteUser() throws Exception {
+  public void testVoteUser() {
     Meeting meeting = dao.findByMeetingId(1);
-    Topic topic = meeting.getTopics().iterator().next();
-    Vote vote = topic.getVotes().iterator().next();
-    User user = vote.getUser();
-    logger.debug("Vote Id: " + vote.getId() + ", user: " + user.getName());
-    assertNotNull(user);
-    assertEquals("Bob", user.getName());
+    boolean tested = false;
+    for (Topic topic : meeting.getTopics()) {
+      if (topic.getId() == 1) {
+        for (Vote vote : topic.getVotes()) {
+          if (vote.getId() == 1) {
+            User user = vote.getUser();
+            logger.debug("Vote Id: " + vote.getId() + ", user: " + user.getName());
+            assertNotNull(user);
+            assertEquals("Alice", user.getName());
+            tested = true;
+          }
+        }
+      }
+    }
+    assertTrue(tested);
+  }
+
+  /*
+   * Test persistence and data consistency of Meeting
+   */
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddMeetingWithNullUser() {
+    Meeting meeting = new Meeting("Review of Key Results", null);
+    dao.addMeeting(meeting);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddMeetingWithInconsistentUser() {
+    User user = new User();
+    user.setId(1000);
+
+    Meeting meeting = new Meeting("Review of Key Results", user);
+    dao.addMeeting(meeting);
+  }
+
+  @Test
+  public void testAddMeeting() {
+    User user = new User();
+    user.setId(1);
+
+    Meeting meeting = new Meeting("Review of Key Results", user);
+    dao.addMeeting(meeting);
+  }
+
+  /*
+   * Test persistence and data consistency of User
+   */
+
+  @Test
+  public void testAddUser() {
+    User user = new User();
+    user.setName("Eve");
+    user.setEmail("eve@wisobi.com");
+
+    dao.addUser(user);
+  }
+
+  /*
+   * Test persistence and data consistency of Topic
+   */
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddTopicWithNullUser() {
+    Meeting meeting = new Meeting();
+    meeting.setId(2);
+
+    Topic topic = new Topic("Topic title", "This is a short pitch of Topic title", meeting, null);
+    dao.addTopic(topic);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddTopicWithInconsistentUser() {
+    Meeting meeting = new Meeting();
+    meeting.setId(2);
+
+    User user = new User();
+    user.setId(1000);
+
+    Topic topic = new Topic("Topic title", "This is a short pitch of Topic title", meeting, user);
+    dao.addTopic(topic);
+
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddTopicWithNullMeeting() {
+    User user = new User();
+    user.setId(1);
+
+    Topic topic = new Topic("Topic Title", "This is a short pitch of Topic Title", null, user);
+    dao.addTopic(topic);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddTopicWithInconsistentMeeting() {
+    User user = new User();
+    user.setId(1);
+
+    Meeting meeting = new Meeting();
+    meeting.setId(1000);
+
+    Topic topic = new Topic("Topic Title", "This is a short pitch of Topic Title", meeting, user);
+    dao.addTopic(topic);
+  }
+
+  @Test
+  public void testAddTopic() {
+    User user = new User();
+    user.setId(1);
+
+    Meeting meeting = new Meeting();
+    meeting.setId(2);
+
+    Topic topic = new Topic("Topic title", "This is a short pitch of Topic Title", meeting, user);
+    dao.addTopic(topic);
+  }
+
+  /*
+   * Test persistence and data consistency of Vote
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddVoteWithNullUser() {
+    Topic topic = new Topic();
+    topic.setId(1);
+
+    Vote vote = new Vote(null, topic);
+    dao.addVote(vote);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddVoteWithInconsistentUser() {
+    Topic topic = new Topic();
+    topic.setId(1);
+
+    User user = new User();
+    user.setId(1000);
+
+    Vote vote = new Vote(user, topic);
+    dao.addVote(vote);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddVoteWithNullTopic() {
+    User user = new User();
+    user.setId(1);
+
+    Vote vote = new Vote(user, null);
+    dao.addVote(vote);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testAddVoteWithInconsistentTopic() {
+    User user = new User();
+    user.setId(1);
+
+    Topic topic = new Topic();
+    topic.setId(1000);
+
+    Vote vote = new Vote(user, topic);
+    dao.addVote(vote);
+  }
+
+  @Test
+  public void addVote() {
+    User user = new User();
+    user.setId(1);
+
+    Topic topic = new Topic();
+    topic.setId(6);
+
+    Vote vote = new Vote(user, topic);
+    dao.addVote(vote);
   }
 
 }

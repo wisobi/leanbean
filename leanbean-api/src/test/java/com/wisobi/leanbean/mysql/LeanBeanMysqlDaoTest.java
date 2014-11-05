@@ -1,12 +1,11 @@
 package com.wisobi.leanbean.mysql;
 
 import com.wisobi.leanbean.LeanBeanDao;
-import com.wisobi.leanbean.entity.Meeting;
-import com.wisobi.leanbean.entity.Topic;
+import com.wisobi.leanbean.jpa.entity.Meeting;
+import com.wisobi.leanbean.jpa.entity.Topic;
 
 import junit.framework.TestCase;
 
-import java.util.List;
 import java.util.Set;
 
 public class LeanBeanMysqlDaoTest extends TestCase {
