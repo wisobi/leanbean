@@ -3,21 +3,21 @@ LeanBean
 
 LeanBean is an application for facilitating and participating in Lean Coffee meetings.
 
-# API Reference
+## API Reference
 
-## GET: /v1/meeting/{meeting-id}
+### GET: /v1/meeting/{meeting-id}
 
-### Fields
+#### Fields
 | Name       | Description | Type |
 | ---------- | ----------- | ---- |
 | meeting-id | Meeting ID. | Long |
 
-´´´´bash
+```bash
 curl -X GET localhost:8080/v1/meeting/1
-´´´
+```
 
-
-´´´´json
+#### Response
+```json
 {
   "id": 1,
   "title": "Weekly Manager Meeting",
@@ -39,86 +39,8 @@ curl -X GET localhost:8080/v1/meeting/1
             "name": "Alice",
             "email": "alice@wisobi.com"
           }
-        },
-        {
-          "id": 5,
-          "user": {
-            "id": 4,
-            "name": "Bob",
-            "email": "bob@wisobi.com"
-          }
-        },
-        {
-          "id": 9,
-          "user": {
-            "id": 6,
-            "name": "Carol",
-            "email": "carol@wisobi.com"
-          }
         }
       ]
-    },
-    {
-      "id": 5,
-      "user": {
-        "id": 4,
-        "name": "Bob",
-        "email": "bob@wisobi.com"
-      },
-      "title": "Autonomous teams",
-      "pitch": "This is a short pitch of Autonomous teams.",
-      "votes": [
-        {
-          "id": 7,
-          "user": {
-            "id": 4,
-            "name": "Bob",
-            "email": "bob@wisobi.com"
-          }
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "user": {
-        "id": 1,
-        "name": "Alice",
-        "email": "alice@wisobi.com"
-      },
-      "title": "Salary process update",
-      "pitch": "This is a short pitch of Salary process update.",
-      "votes": [
-        {
-          "id": 1,
-          "user": {
-            "id": 1,
-            "name": "Alice",
-            "email": "alice@wisobi.com"
-          }
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "user": {
-        "id": 4,
-        "name": "Bob",
-        "email": "bob@wisobi.com"
-      },
-      "title": "Is our code tested good enough?",
-      "pitch": "This is a short pitch of Is our code tested good enough?",
-      "votes": []
-    },
-    {
-      "id": 10,
-      "user": {
-        "id": 6,
-        "name": "Carol",
-        "email": "carol@wisobi.com"
-      },
-      "title": "Upcoming conference",
-      "pitch": "This is a short pitch of Upcoming conference.",
-      "votes": []
     }
   ],
   "user": {
@@ -129,23 +51,23 @@ curl -X GET localhost:8080/v1/meeting/1
   "duration": 0,
   "startDateTime": null
 }
-´´´
+```
 
-## POST: /v1/user/
+### POST: /v1/user/
 
-### Fields
+#### Fields
 | Name   | Description        | Type   |
 | ------ | ------------------ | ------ |
 | name   | User display name. | String |
 | email  | User email.        | String | 
 
-´´´´bash
+```bash
 curl -X POST -H "Content-Type: application/json" -d '{"name": "Joe", "email": "joe@wisobi.com"}' localhost:8080/v1/user/
-´´´
+```
 
-## POST: /v1/meeting/
+### POST: /v1/meeting/
 
-### Fields
+#### Fields
 | Name          | Description                        | Type   |
 | ------------- | ---------------------------------- | ------ |
 | title         | Meeting title.                     | String |
@@ -153,13 +75,13 @@ curl -X POST -H "Content-Type: application/json" -d '{"name": "Joe", "email": "j
 | startDateTime | Meeting start date and time.       | Date   |
 | userId        | User ID of who added the meeting.  | Long   |
 
-´´´´bash
+```bash
 curl -X POST -H "Content-Type: application/json" -d '{"title": "Meeting Title", "userId": 1, "duration": 0, "startDateTime": null}' localhost:8080/v1/meeting/
-´´´´
+```
 
-## POST: /v1/topic/
+### POST: /v1/topic/
 
-### Fields
+#### Fields
 | Name      | Description                       | Type   |
 | --------- | --------------------------------- | ------ |
 | title     | Topic title.                      | String |
@@ -167,18 +89,18 @@ curl -X POST -H "Content-Type: application/json" -d '{"title": "Meeting Title", 
 | meetingId | Meeting ID of topic.              | Long   |
 | userId    | User ID of who added the meeting. | Long   | 
 
-´´´´bash
+```bash
 curl -X POST -H "Content-Type: application/json" -d '{"title": "Topic Title", "pitch": "This i a pitch for Topic Title", "userId": 1, "meetingId": 1}' localhost:8080/v1/topic/
-´´´´
+```
 
-## POST: /v1/vote/
+### POST: /v1/vote/
 
-### Fields
+#### Fields
 | Name    | Description           | Type |
 | ------- | --------------------- | ---- |
 | topicId | Topic ID of vote.     | Long |
 | userId  | User ID of who voted. | Long | 
 
-´´´´bash
+```bash
 curl -X POST -H "Content-Type: application/json" -d '{"topicId": 1, "userId": 1}' localhost:8080/v1/vote/
-´´´´
+```
