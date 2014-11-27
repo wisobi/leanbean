@@ -71,4 +71,17 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>tomcat-maven-plugin</artifactId>
+                <configuration>
+                    <server>AWSServer</server>
+                    <path>/leanbean</path>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

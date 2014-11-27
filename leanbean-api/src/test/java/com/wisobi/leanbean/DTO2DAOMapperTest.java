@@ -1,10 +1,10 @@
 package com.wisobi.leanbean;
 
 import com.wisobi.leanbean.dto.DTO2DAOMapper;
-import com.wisobi.leanbean.dto.MeetingDTO;
-import com.wisobi.leanbean.dto.TopicDTO;
-import com.wisobi.leanbean.dto.UserDTO;
-import com.wisobi.leanbean.dto.VoteDTO;
+import com.wisobi.leanbean.dto.MeetingTO;
+import com.wisobi.leanbean.dto.TopicTO;
+import com.wisobi.leanbean.dto.UserTO;
+import com.wisobi.leanbean.dto.VoteTO;
 import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.entity.Topic;
 import com.wisobi.leanbean.jpa.entity.User;
@@ -29,14 +29,14 @@ public class DTO2DAOMapperTest {
     int duration = 60;
     long userId = 2;
 
-    MeetingDTO meetingDTO = new MeetingDTO();
-    meetingDTO.setId(id);
-    meetingDTO.setTitle(title);
-    meetingDTO.setStartDateTime(startDateTime);
-    meetingDTO.setDuration(duration);
-    meetingDTO.setUserId(userId);
+    MeetingTO meetingTO = new MeetingTO();
+    meetingTO.setId(id);
+    meetingTO.setTitle(title);
+    meetingTO.setStartDateTime(startDateTime);
+    meetingTO.setDuration(duration);
+    meetingTO.setUserId(userId);
 
-    Meeting meeting = DTO2DAOMapper.mapMeeting(meetingDTO);
+    Meeting meeting = DTO2DAOMapper.mapMeeting(meetingTO);
 
     assertEquals(id, meeting.getId());
     assertEquals(title, meeting.getTitle());
@@ -54,14 +54,14 @@ public class DTO2DAOMapperTest {
     long userId = 2;
     long meetingId = 3;
 
-    TopicDTO topicDTO = new TopicDTO();
-    topicDTO.setId(id);
-    topicDTO.setTitle(title);
-    topicDTO.setPitch(pitch);
-    topicDTO.setUserId(userId);
-    topicDTO.setMeetingId(meetingId);
+    TopicTO topicTO = new TopicTO();
+    topicTO.setId(id);
+    topicTO.setTitle(title);
+    topicTO.setPitch(pitch);
+    topicTO.setUserId(userId);
+    topicTO.setMeetingId(meetingId);
 
-    Topic topic = DTO2DAOMapper.mapTopic(topicDTO);
+    Topic topic = DTO2DAOMapper.mapTopic(topicTO);
 
     assertEquals(id, topic.getId());
     assertEquals(title, topic.getTitle());
@@ -76,12 +76,12 @@ public class DTO2DAOMapperTest {
     String name = "Name";
     String email = "email@wisobi.com";
 
-    UserDTO userDTO = new UserDTO();
-    userDTO.setId(id);
-    userDTO.setName(name);
-    userDTO.setEmail(email);
+    UserTO userTO = new UserTO();
+    userTO.setId(id);
+    userTO.setName(name);
+    userTO.setEmail(email);
 
-    User user = DTO2DAOMapper.mapUser(userDTO);
+    User user = DTO2DAOMapper.mapUser(userTO);
 
     assertEquals(id, user.getId());
     assertEquals(name, user.getName());
@@ -94,12 +94,12 @@ public class DTO2DAOMapperTest {
     long topicId = 2;
     long userId = 3;
 
-    VoteDTO voteDTO = new VoteDTO();
-    voteDTO.setId(id);
-    voteDTO.setTopicId(topicId);
-    voteDTO.setUserId(userId);
+    VoteTO voteTO = new VoteTO();
+    voteTO.setId(id);
+    voteTO.setTopicId(topicId);
+    voteTO.setUserId(userId);
 
-    Vote vote = DTO2DAOMapper.mapVote(voteDTO);
+    Vote vote = DTO2DAOMapper.mapVote(voteTO);
 
     assertEquals(id, vote.getId());
     assertEquals(topicId, vote.getTopic().getId());

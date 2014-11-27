@@ -10,7 +10,11 @@ import javax.persistence.Persistence;
  */
 public class JpaUtil {
 
-  private static class EntityManagerFactoryHolder {
+  private JpaUtil() {
+
+  }
+
+  private static class LazyHolder {
 
     private static final EntityManagerFactory emf;
 
@@ -22,12 +26,12 @@ public class JpaUtil {
   }
 
   public static EntityManagerFactory getEntityManagerFactory() {
-    return EntityManagerFactoryHolder.emf;
+    return LazyHolder.emf;
   }
 
   public static EntityManagerFactory getEntityManagerFactory(Properties properties) {
-    EntityManagerFactoryHolder.properties = properties;
-    return EntityManagerFactoryHolder.emf;
+    LazyHolder.properties = properties;
+    return LazyHolder.emf;
   }
 
 }

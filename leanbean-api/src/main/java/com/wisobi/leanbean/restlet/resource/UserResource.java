@@ -2,7 +2,7 @@ package com.wisobi.leanbean.restlet.resource;
 
 import com.wisobi.leanbean.LeanBeanDao;
 import com.wisobi.leanbean.dto.DTO2DAOMapper;
-import com.wisobi.leanbean.dto.UserDTO;
+import com.wisobi.leanbean.dto.UserTO;
 import com.wisobi.leanbean.jpa.LeanBeanJpaDao;
 import com.wisobi.leanbean.jpa.entity.User;
 
@@ -19,8 +19,8 @@ public class UserResource extends ServerResource {
   private LeanBeanDao dao = new LeanBeanJpaDao();
 
   @Post("json")
-  public void addUser(UserDTO userDTO) {
-    User user = DTO2DAOMapper.mapUser(userDTO);
+  public void addUser(UserTO userTO) {
+    User user = DTO2DAOMapper.mapUser(userTO);
 
     try {
       dao.addUser(user);

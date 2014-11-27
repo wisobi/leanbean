@@ -10,57 +10,57 @@ import com.wisobi.leanbean.jpa.entity.Vote;
  */
 public class DTO2DAOMapper {
 
-  public static Meeting mapMeeting(MeetingDTO meetingDTO) {
+  public static Meeting mapMeeting(MeetingTO meetingTO) {
     Meeting meeting = new Meeting();
-    meeting.setId(meetingDTO.getId());
-    meeting.setDuration(meetingDTO.getDuration());
-    meeting.setStartDateTime(meetingDTO.getStartDateTime());
-    meeting.setTitle(meetingDTO.getTitle());
+    meeting.setId(meetingTO.getId());
+    meeting.setDuration(meetingTO.getDuration());
+    meeting.setStartDateTime(meetingTO.getStartDateTime());
+    meeting.setTitle(meetingTO.getTitle());
 
     User user = new User();
-    user.setId(meetingDTO.getUserId());
+    user.setId(meetingTO.getUserId());
     meeting.setUser(user);
 
     return meeting;
   }
 
-  public static Topic mapTopic(TopicDTO topicDTO) {
+  public static Topic mapTopic(TopicTO topicTO) {
     Topic topic = new Topic();
-    topic.setId(topicDTO.getId());
-    topic.setTitle(topicDTO.getTitle());
-    topic.setPitch(topicDTO.getPitch());
+    topic.setId(topicTO.getId());
+    topic.setTitle(topicTO.getTitle());
+    topic.setPitch(topicTO.getPitch());
 
     User user = new User();
-    user.setId(topicDTO.getUserId());
+    user.setId(topicTO.getUserId());
     topic.setUser(user);
 
     Meeting meeting = new Meeting();
-    meeting.setId(topicDTO.getMeetingId());
+    meeting.setId(topicTO.getMeetingId());
     topic.setMeeting(meeting);
 
     return topic;
   }
 
-  public static Vote mapVote(VoteDTO voteDTO) {
+  public static Vote mapVote(VoteTO voteTO) {
     Vote vote = new Vote();
-    vote.setId(voteDTO.getId());
+    vote.setId(voteTO.getId());
 
     User user = new User();
-    user.setId(voteDTO.getUserId());
+    user.setId(voteTO.getUserId());
     vote.setUser(user);
 
     Topic topic = new Topic();
-    topic.setId(voteDTO.getTopicId());
+    topic.setId(voteTO.getTopicId());
     vote.setTopic(topic);
 
     return vote;
   }
 
-  public static User mapUser(UserDTO userDTO) {
+  public static User mapUser(UserTO userTO) {
     User user = new User();
-    user.setId(userDTO.getId());
-    user.setName(userDTO.getName());
-    user.setEmail(userDTO.getEmail());
+    user.setId(userTO.getId());
+    user.setName(userTO.getName());
+    user.setEmail(userTO.getEmail());
     return user;
   }
 
