@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.wisobi.leanbean" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>LeanBean</name>
+    <description>
+        A LeanBean mobile application.
+    </description>
+    <author email="bjork@wisobi.com" href="http://www.wisobi.com">
+        Wisobi LeanBean Team
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+</widget>
