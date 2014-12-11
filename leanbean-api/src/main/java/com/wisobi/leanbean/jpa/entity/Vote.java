@@ -21,15 +21,15 @@ public class Vote implements Serializable {
 
   private long id;
 
-  private User user;
+  private Device device;
 
   private Topic topic;
 
   public Vote() {
   }
 
-  public Vote(User user, Topic topic) {
-    this.user = user;
+  public Vote(Device device, Topic topic) {
+    this.device = device;
     this.topic = topic;
   }
 
@@ -44,13 +44,13 @@ public class Vote implements Serializable {
   }
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id")
-  public User getUser() {
-    return user;
+  @JoinColumn(name = "device_id")
+  public Device getDevice() {
+    return device;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setDevice(Device device) {
+    this.device = device;
   }
 
   @ManyToOne

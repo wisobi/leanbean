@@ -1,8 +1,9 @@
 package com.wisobi.leanbean.restlet;
 
+import com.wisobi.leanbean.restlet.resource.DeviceResource;
+import com.wisobi.leanbean.restlet.resource.DeviceUUIDResource;
 import com.wisobi.leanbean.restlet.resource.MeetingResource;
 import com.wisobi.leanbean.restlet.resource.TopicResource;
-import com.wisobi.leanbean.restlet.resource.UserResource;
 import com.wisobi.leanbean.restlet.resource.VoteResource;
 
 import org.restlet.Application;
@@ -24,8 +25,11 @@ public class LeanBeanApplication extends Application {
     Router router = new Router(getContext());
     router.attach("/v1/meeting/", MeetingResource.class);
     router.attach("/v1/meeting/{meeting-id}", MeetingResource.class);
-    router.attach("/v1/user/", UserResource.class);
+    router.attach("/v1/device/", DeviceResource.class);
+    router.attach("/v1/device/{device-id}", DeviceResource.class);
+    router.attach("/v1/device-uuid/{device-uuid}", DeviceUUIDResource.class);
     router.attach("/v1/topic/", TopicResource.class);
+    router.attach("/v1/topic/{topic-id}", TopicResource.class);
     router.attach("/v1/vote/", VoteResource.class);
     router.attach("/v1/bootstrap", LeanBeanBootstrap.class);
     return router;

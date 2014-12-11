@@ -2,7 +2,7 @@ package com.wisobi.leanbean.dto;
 
 import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.entity.Topic;
-import com.wisobi.leanbean.jpa.entity.User;
+import com.wisobi.leanbean.jpa.entity.Device;
 import com.wisobi.leanbean.jpa.entity.Vote;
 
 /**
@@ -17,9 +17,9 @@ public class DTO2DAOMapper {
     meeting.setStartDateTime(meetingTO.getStartDateTime());
     meeting.setTitle(meetingTO.getTitle());
 
-    User user = new User();
-    user.setId(meetingTO.getUserId());
-    meeting.setUser(user);
+    Device device = new Device();
+    device.setId(meetingTO.getDeviceId());
+    meeting.setDevice(device);
 
     return meeting;
   }
@@ -30,9 +30,9 @@ public class DTO2DAOMapper {
     topic.setTitle(topicTO.getTitle());
     topic.setPitch(topicTO.getPitch());
 
-    User user = new User();
-    user.setId(topicTO.getUserId());
-    topic.setUser(user);
+    Device device = new Device();
+    device.setId(topicTO.getDeviceId());
+    topic.setDevice(device);
 
     Meeting meeting = new Meeting();
     meeting.setId(topicTO.getMeetingId());
@@ -45,9 +45,9 @@ public class DTO2DAOMapper {
     Vote vote = new Vote();
     vote.setId(voteTO.getId());
 
-    User user = new User();
-    user.setId(voteTO.getUserId());
-    vote.setUser(user);
+    Device device = new Device();
+    device.setId(voteTO.getDeviceId());
+    vote.setDevice(device);
 
     Topic topic = new Topic();
     topic.setId(voteTO.getTopicId());
@@ -56,12 +56,16 @@ public class DTO2DAOMapper {
     return vote;
   }
 
-  public static User mapUser(UserTO userTO) {
-    User user = new User();
-    user.setId(userTO.getId());
-    user.setName(userTO.getName());
-    user.setEmail(userTO.getEmail());
-    return user;
+  public static Device mapDevice(DeviceTO deviceTO) {
+    Device device = new Device();
+    device.setId(deviceTO.getId());
+    device.setCordova(deviceTO.getCordova());
+    device.setModel(deviceTO.getModel());
+    device.setPlatform(deviceTO.getPlatform());
+    device.setAlias(deviceTO.getAlias());
+    device.setUuid(deviceTO.getUuid());
+    device.setVersion(deviceTO.getVersion());
+    return device;
   }
 
 }

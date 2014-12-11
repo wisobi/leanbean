@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class TopicTO implements Serializable {
 
   private long id;
-  private long userId;
+  private long deviceId;
   private String title;
   private String pitch;
   private long meetingId;
@@ -25,12 +25,12 @@ public class TopicTO implements Serializable {
     this.id = id;
   }
 
-  public long getUserId() {
-    return userId;
+  public long getDeviceId() {
+    return deviceId;
   }
 
-  public void setUserId(long userId) {
-    this.userId = userId;
+  public void setDeviceId(long deviceId) {
+    this.deviceId = deviceId;
   }
 
   public String getTitle() {

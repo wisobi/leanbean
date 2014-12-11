@@ -1,58 +1,4 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-var app = {
-    // Application Constructor
-    initialize: function() {
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
-    }
-};
-
-app.initialize();
-
 var leanbean = {
-
-    _baseUrl: "http://localhost:8080/v1/",
 
     _elements: {
         joinMeetingId: document.querySelector('#join-meeting-id'),
@@ -61,156 +7,707 @@ var leanbean = {
     },
 
     // LeanBean Constructor
-    init: function() {
+    init: function () {
         this._bindEvents();
     },
 
     // Bind event listeners
-    _bindEvents: function() {
-        $(document).on('click', '#join-meeting-button', this._joinMeetingClick.bind(this));
-        $(document).on("pagecontainerbeforetransition", this._pageContainerBeforeTransition.bind(this));
+    _bindEvents: function () {
+        $(document).on('click', '#home-meeting-join-button', this._homeMeetingJoinButtonClick.bind(this));
+        $(document).on('click', '#home-meeting-add-button', this._homeMeetingAddButtonClick.bind(this));
+        $(document).on('click', '#home-settings-alias-button', this._homeSettingsAliasButtonClick.bind(this));
+        $(document).on('click', '#home-device-add-button', this._homeDeviceAddButtonClick.bind(this));
+        $(document).on('click', '#meeting-topic-add-button', this._meetingTopicAddButtonClick.bind(this));
+        $(document).on('click', '#meeting-topic-delete-button', this._meetingTopicDeleteConfirm.bind(this));
+        $(document).on('change', '#meeting-facilitate-checkbox', this._meetingFacilitateCheckboxChange.bind(this));
+
+        $(document).on("pagecontainerbeforeshow",
+                       this._pageContainerBeforeShow.bind(this));
     },
 
-    // Event handlers
-    _joinMeetingClick: function(event) {
-        // Create JSON object to hold data for page #join-meeting
-        var meetingId = document.querySelector('#join-meeting-id').value; //this._elements.joinMeetingId.value;
-        var joinMeetingData = {"meetingId": meetingId};
-        localStorage.setItem("join-meeting", JSON.stringify(joinMeetingData));
-        // Change page to #meeting
-        $(":mobile-pagecontainer").pagecontainer("change", "#meeting");
-    },
+    // Static Event Handlers
 
-    // Load data from REST API or Localstorage before transition
-    _pageContainerBeforeTransition: function (event, ui) {
+    _pageContainerBeforeShow: function (event, ui) {
         var pageId = ui.toPage[0].id;
-        console.log("pageId " + pageId);
-        if(pageId == 'meeting') {
-            var joinMeetingData = JSON.parse(localStorage.getItem("join-meeting"));
-            var meetingId = joinMeetingData.meetingId;
-            console.log("meetingId = " + meetingId);
-            $("#meeting_id").html(meetingId);
-            this._getMeeting(meetingId);
+        if (pageId == 'meeting') {
+
+            // Meeting Page
+            //this._getCurrentMeeting();
+        } else if (pageId == 'home') {
+
+            // Home Page
+            var recentMeetings = this._getRecentMeetings;
+            for(var i = 0; i < recentMeetings.length; i++) {
+                console.log("Recent meeting " + i + " has meetingId " + recentMeetings[i]);
+            }
         }
     },
 
-    // REST
-    _getMeeting: function (meetingId) {
-        var url = this._baseUrl + "meeting/" + meetingId;
-        $.ajax({
-            type: "GET",
-            url: url,
-            datatype: "jsonp",
-            success: function (meeting) {
-                console.log("Successfully fetched meeting with id = " + meeting.id);
-                console.dir(meeting);
-                leanbean._updateMeeting(meeting);
-            }
-        })
+    _homeDeviceAddButtonClick: function(event) {
+        var deviceForm = this._formDataToJSON('#home-device-add-form');
+        console.log(deviceForm);
+        console.log('_homeDeviceAddButtonClick: deviceForm.alias = ' + deviceForm.alias);
+
+        var deviceTO = {};
+        deviceTO.alias = deviceForm.alias;
+        deviceTO.uuid = device.uuid;
+        deviceTO.cordova = device.cordova;
+        deviceTO.model = device.model;
+        deviceTO.version = device.version;
+        deviceTO.platform = device.platform;
+
+        this._setSetting("device", deviceTO);
+        leanbeanClient.postDevice(deviceTO);
     },
 
-    _updateMeeting: function (meeting) {
-        document.querySelector('#meeting-header').innerHTML = meeting.title; //this._elements.meetingHeader.innerHTML = meeting.title;
+    _homeMeetingJoinButtonClick: function (event) {
+        var meetingId = document.querySelector('#home-meeting-join-id').value;
+        this._setState("meetingId", meetingId);
+        this._setState("isFacilitator", false);
+        this._addRecentMeetings(meetingId);
+        this._getCurrentMeeting();
+        // Change page to #meeting
+        //$(":mobile-pagecontainer").pagecontainer("change", "#meeting");
+    },
+
+    _homeMeetingAddButtonClick: function (event) {
+        var meetingForm = this._formDataToJSON('#home-meeting-add-form');
+        meetingForm.deviceId = this._getSetting("device").id;
+        leanbeanClient.postMeeting(JSON.stringify(meetingForm));
+        // Change page to #meeting
+        //$(":mobile-pagecontainer").pagecontainer("change", "#meeting");
+    },
+
+    _meetingTopicAddButtonClick: function (event) {
+        var topicForm = this._formDataToJSON('#meeting-topic-add-form');
+        if (topicForm.title == '' || topicForm.title == null) {
+            // Do something
+        }
+        topicForm.deviceId = this._getSetting("device").id;
+        topicForm.meetingId = this._getState().meetingId;
+        leanbeanClient.postTopic(JSON.stringify(topicForm));
+
+        $('#meeting-topic-add').panel('close');
+    },
+
+    _meetingTopicDeleteConfirm: function(event) {
+        var topicId = this._getState().topicId;
+        leanbeanClient.deleteTopic(topicId)
+    },
+
+    _meetingFacilitateCheckboxChange: function(event) {
+        var checkbox = $('#meeting-facilitate-checkbox').val();
+        this._setState("isFacilitator", checkbox == 'on' ? true : false);
+        leanbeanClient.getMeeting(this._getState().meetingId);
+        $('#meeting-topic-add').panel('close');
+    },
+
+    // Dynamic Event Handlers
+
+    _meetingTopicToggleButtonClick: function (event) {
+        var toggleBtndiv = $('#' + event.target.id);
+        var titleDiv = $(event.data.headingDiv);
+        var topicDiv = $(event.data.topicDiv);
+        var pitchDiv = $(event.data.pitchDiv);
+        toggleBtndiv.toggleClass("ui-icon-plus");
+        toggleBtndiv.toggleClass("ui-icon-minus");
+        topicDiv.toggleClass("w-collapsible-collapsed");
+        titleDiv.toggleClass("w-collapsible-heading-collapsed");
+        pitchDiv.toggleClass("w-collapsible-content-collapsed");
+    },
+
+    _meetingTopicVoteButtonClick: function (event) {
+        var div = $('#' + event.target.id);
+        div.toggleClass("ui-btn-b");
+        div.attr('checked', !div.attr('checked'));
+
+        var votedTopics = $('div.w-collapsible-heading div.ui-icon-user[checked="checked"]');
+        var notVotedTopics = $('div.w-collapsible-heading div.ui-icon-user:not([checked="checked"])');
+        if (votedTopics.length == 2) {
+            $(notVotedTopics).each(function (index) {
+                $(this).addClass("ui-state-disabled");
+            });
+        } else {
+            $(notVotedTopics).each(function (index) {
+                $(this).removeClass("ui-state-disabled");
+            });
+        }
+    },
+
+    _meetingTopicDeleteButtonClick: function(event) {
+        // Example: id="meeting-topic-delete-button-5"
+        var topicId = event.target.id.substr(28);
+        this._setState("topicId", topicId);
+        $("#meeting-topic-delete").popup("open");
+    },
+
+    _homeSettingsAliasButtonClick: function (event) {
+        var alias = $('#home-settings-alias').val();
+        var id = this._getSetting("device").id;
+        var deviceTO = {};
+        deviceTO.id = id;
+        deviceTO.alias = alias;
+        deviceTO.uuid = device.uuid;
+        deviceTO.cordova = device.cordova;
+        deviceTO.model = device.model;
+        deviceTO.version = device.version;
+        deviceTO.platform = device.platform;
+        this._setSetting("device", deviceTO);
+        leanbeanClient.putDevice(deviceTO);
+    },
+
+    _handleLoginExistingDevice: function(deviceTO) {
+        console.log("_handleLoginExistingDevice: deviceTO.id = " + deviceTO.id);
+        $('#home-settings-alias').val(deviceTO.alias);
+        this._setSetting("device", deviceTO);
+    },
+
+    _handleLoginNewDevice: function(device) {
+        console.log("_handleLoginNewDevice: device.uuid = " + device.uuid);
+        $("#home-device-add").popup("open");
+        //leanbean._postDevice(JSON.stringify(device));
+    },
+
+    // Layout functions
+
+    _getCurrentMeeting: function() {
+        var meetingId = this._getState().meetingId;
+        console.log("meetingId = " + meetingId);
+        leanbeanClient.getMeeting(meetingId);
+    },
+
+    _loadMeeting: function (meeting) {
+        document.querySelector('#meeting-header-text').innerHTML = meeting.title;
+        document.querySelector('#meeting-topic-set').innerHTML = '';
         for (var i = 0; i < meeting.topics.length; i++) {
-            this._generateTopicDiv(meeting.topics[i]);
-        }   
+            var topic = meeting.topics[i];
+            this._generateTopicDiv(topic);
+        }
+
+        // Trigger votes on topics that device has voted on and
+        // disable if max votes is reached
+        for (var i = 0; i < meeting.topics.length; i++) {
+            var topic = meeting.topics[i];
+            // Trigger votes on topics that device has voted on
+            var deviceId = this._getSetting("device").id;
+            $(topic.votes).each(function (key, value) {
+                if (value.device.id == deviceId) {
+                    $('#meeting-topic-vote-button-' + topic.id).trigger('click');
+                }
+            });
+        }
+
+        $('#meeting-topic-set').find('div[data-role=controlgroup]').controlgroup();
+        $('#meeting-footer-text').html("Lean Coffee ID: " + meeting.id);
+        // Meeting page is loaded and ready to be viewed
+        $(":mobile-pagecontainer").pagecontainer("change", "#meeting");
     },
 
     _generateTopicDiv: function (topic) {
-        var portletDiv = document.createElement('div');
-        portletDiv.className = "portlet";
-        var portletHeaderDiv = document.createElement('div');
-        portletHeaderDiv.className = "portlet-header";
-        var portletContentDiv = document.createElement('div');
-        portletContentDiv.className = "portlet-content";
-        portletDiv.appendChild(portletHeaderDiv);
-        portletDiv.appendChild(portletContentDiv);
 
-        portletHeaderDiv.innerHTML = topic.title + " (" + this._numVotes(topic) + ")";
-        portletContentDiv.innerHTML = topic.user.name;
-        //this._generateVotesDiv(topic.votes, portletDiv);
-        document.querySelector('#topics-container').appendChild(portletDiv); //this._elements.topicsContainer.appendChild(portletDiv);
+        var state = this._getState();
+
+        // Button divs
+        var delBtnDiv = document.createElement('div');
+        $(delBtnDiv).addClass('ui-btn ui-corner-all ui-icon-delete ui-btn-icon-notext')
+            .attr('id', 'meeting-topic-delete-button-' + topic.id)
+            .on('click', this._meetingTopicDeleteButtonClick.bind(this));
+
+        var voteBtnDiv = document.createElement('div');
+        $(voteBtnDiv).addClass('ui-btn ui-corner-all ui-icon-user ui-btn-icon-notext')
+            .attr('id', 'meeting-topic-vote-button-' + topic.id)
+            .on('click', this._meetingTopicVoteButtonClick.bind(this));
+
+        var toggleBtnDiv = document.createElement('div');
+        $(toggleBtnDiv).addClass('ui-btn ui-corner-all ui-icon-plus ui-btn-icon-notext')
+            .attr('id', 'meeting-topic-toggle-button-' + topic.id)
+            .on('click',
+                {
+                    topicDiv: '#meeting-topic-' + topic.id,
+                    pitchDiv: '#meeting-topic-pitch-' + topic.id,
+                    headingDiv: '#meeting-topic-title-' + topic.id
+                },
+                this._meetingTopicToggleButtonClick.bind(this));
+
+
+        // Control group div
+        var controlGroupDiv = document.createElement('div');
+        $(controlGroupDiv).attr('data-role', 'controlgroup')
+            .attr('data-type', 'horizontal')
+            .attr('data-mini', 'true');
+        if(state != null && state.isFacilitator != null && state.isFacilitator == true) {
+            $(controlGroupDiv).append(delBtnDiv);
+        }
+        $(controlGroupDiv).append(voteBtnDiv)
+            .append(toggleBtnDiv)
+            .trigger('create');
+
+        // Title div
+        var titleDiv = document.createElement('div');
+        $(titleDiv).addClass('ui-btn ui-corner-all')
+            .html(topic.title);
+
+        // Heading div
+        var headingDiv = document.createElement('div');
+        $(headingDiv).addClass('w-collapsible-heading w-collapsible-heading-collapsed')
+            .attr('id', 'meeting-topic-title-' + topic.id)
+            .append(controlGroupDiv)
+            .append(titleDiv);
+
+        // Pitch div
+        var pitchDiv = document.createElement('div');
+        $(pitchDiv).addClass('w-collapsible-content w-collapsible-content-collapsed ui-corner-all ui-body-inherit')
+            .attr('id', 'meeting-topic-pitch-' + topic.id)
+            .html('<p>' + topic.pitch + '</p>' + topic.device.alias);
+
+        // Topic div
+        var topicDiv = document.createElement('div');
+        $(topicDiv).addClass('w-collapsible w-collapsible-collapsed')
+            .attr("id", "meeting-topic-" + topic.id)
+            .append(headingDiv)
+            .append(pitchDiv);
+
+        document.querySelector('#meeting-topic-set').appendChild(topicDiv);
+    },
+
+    // Utility functions
+
+    _formDataToJSON: function (formId) {
+        var jsonObject = {};
+        var formData = $(formId).serializeArray();
+        for (i = 0; i < formData.length; i++) {
+            var name = formData[i]["name"];
+            var value = formData[i]["value"];
+            jsonObject[name] = value;
+        }
+        return jsonObject;
+    },
+
+    _getSettings: function() {
+        var settings = JSON.parse(localStorage.getItem("settings"));
+        settings = settings == null ? {} : settings;
+        return settings;
+    },
+
+    _getSetting: function(key) {
+        var settings = this._getSettings();
+        return settings[key];
+    },
+
+    _setSetting: function(key, value) {
+        console.log("_setSetting(): value = ...");
+        console.log(value);
+        var settings = this._getSettings();
+        settings[key] = value;
+        localStorage.setItem("settings", JSON.stringify(settings));
+    },
+
+    _getState: function() {
+        var state = JSON.parse(localStorage.getItem("state"));
+        state = state == null ? {} : state;
+        return state;
+    },
+
+    _setState: function(key, value) {
+        var state = this._getState();
+        state[key] = value;
+        localStorage.setItem("state", JSON.stringify(state));
     },
 
     _numVotes: function (topic) {
-        if (topic.votes.length == 1 && topic.votes[0].user.name == null) {
+        if (topic.votes.length == 1 && topic.votes[0].device.id == null) {
             return 0;
         } else {
             return topic.votes.length;
         }
+    },
+
+    _getRecentMeetings: function() {
+        var recentMeetings = this._getState().recentMeetings;
+        return recentMeeting == null ? [] : recentMeetings;
+    },
+
+    _addRecentMeetings: function(meetingId) {
+        var recentMeetings = this._getState().recentMeetings;
+        recentMeetings = recentMeetings == null ? [] : recentMeetings;
+
+        // Check if meeting already is in stack
+        var index;
+        for (var i = 0; recentMeetings.length; i++) {
+            if(recentMeetings[i] == meetingId) {
+                index = i;
+                break;
+            }
+        }
+
+        if(index != null) {
+            // Meeting is in stack, move it the top
+            var oldTop = recentMeetings[0];
+            recentMeetings.splice(index, 1);
+            recentMeetings.push(meetingId);
+
+        } else {
+            // Meeting not in stack, add it and crop
+            recentMeetings.push(meetingId);
+            recentMeetings.splice(5);
+        }
+        this._setState("recentMeetings", recentMeetings);
     }
-}
+};
 
 leanbean.init();
 
-function postMeeting() {
-    // var url = leanbean._baseUrl + "meetings/";
-    var url = "http://localhost:8080/v1/meetings/";
-    var meeting = {
-        "title": "New Posted Meeting",
-        "user": {
-            "id": 1
+var leanbeanClient = {
+
+    //_baseUrl: "http://10.0.2.2:8080/v1/",
+    _baseUrl: "http://api.leanbean.wisobi.com:8080/leanbean/v1/",
+
+    postDevice: function(device) {
+        var url = this._baseUrl + "device/";
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'POST',
+                   url: url,
+                   datatype: 'json',
+                   data: JSON.stringify(device),
+                   success: function (deviceTO) {
+                       console.log("Successfully added device.");
+                       leanbeanClient.login(deviceTO);
+                   },
+                   error: function (jqXHR, textStatus, errorThrown) {
+                       if (jqXHR.status == 400) {
+                           alert('Error postDevice: HTTP status ' + jqXHR.status);
+                       } else {
+                           alert('Error postDevice: HTTP status ' + jqXHR.status);
+                       }
+                   }
+               })
+    },
+
+    putDevice: function(device) {
+        var url = this._baseUrl + "device/" + device.id;
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'PUT',
+                   url: url,
+                   datatype: 'json',
+                   data: JSON.stringify(device),
+                   success: function (deviceTO) {
+                       console.log("Successfully updated device.");
+                       leanbeanClient.login(deviceTO);
+                   },
+                   error: function (jqXHR, textStatus, errorThrown) {
+                       if (jqXHR.status == 400) {
+                           alert('Error putDevice: HTTP status ' + jqXHR.status);
+                       } else {
+                           alert('Error putDevice: HTTP status ' + jqXHR.status);
+                       }
+                   }
+               })
+    },
+
+    getMeeting: function (meetingId) {
+        if (meetingId == '' || meetingId == null) {
+            return;
+        }
+        var url = this._baseUrl + "meeting/" + meetingId;
+        $.ajax({
+                   type: "GET",
+                   url: url,
+                   datatype: "json",
+                   success: function (meetingTO) {
+                       console.log("Successfully fetched meeting with id = " + meetingTO.id);
+                       leanbean._loadMeeting(meetingTO);
+                   },
+                   error: function (jqXHR, ajaxOptions, thrownError) {
+                       if (jqXHR.status == 404) {
+                           alert('Error _getMeeting: HTTP status ' + jqXHR.status);
+                       } else {
+                           alert('Error _getMeeting: HTTP status ' + jqXHR.status);
+                       }
+                       //console.log(testData);
+                       //leanbean._loadMeeting(testData);
+                   }
+               })
+    },
+
+    postMeeting: function (meeting) {
+        var url = this._baseUrl + "meeting/";
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'POST',
+                   url: url,
+                   datatype: 'json',
+                   data: meeting,
+                   success: function (meetingTO) {
+                       console.log("Successfully added meeting.");
+                       leanbean._loadMeeting(meetingTO);
+                   },
+                   error: function (jqXHR, textStatus, errorThrown) {
+                       if (jqXHR.status == 400) {
+                           alert('Error _postMeeting: HTTP status ' + jqXHR.status);
+                       } else {
+                           alert('Error _postMeeting: HTTP status ' + jqXHR.status);
+                       }
+                   }
+               })
+    },
+
+    postTopic: function (topic) {
+        var url = this._baseUrl + "topic/";
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'POST',
+                   url: url,
+                   datatype: 'json',
+                   data: topic,
+                   success: function () {
+                       console.log("Successfully added topic. Reloading meeting ...")
+                       leanbean._getCurrentMeeting();
+                   }
+               })
+    },
+
+    postVote: function (vote) {
+        var url = this._baseUrl + "vote/";
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'POST',
+                   url: url,
+                   datatype: 'json',
+                   data: vote,
+                   success: function () {
+                       console.log("Successfully added vote.")
+                   }
+               })
+    },
+
+    deleteTopic: function(topicId) {
+        if (topicId == '' || topicId == null) {
+            return;
+        }
+        var url = this._baseUrl + "topic/" + topicId;
+        $.ajax({
+                   type: "DELETE",
+                   url: url,
+                   datatype: "json",
+                   success: function () {
+                       console.log("Successfully deleted topic with id = " + topicId);
+                       leanbean._getCurrentMeeting();
+                   },
+                   error: function (jqXHR, ajaxOptions, thrownError) {
+                       if (jqXHR.status == 404) {
+                           alert('Error deleteTopic: HTTP status ' + jqXHR.status);
+                       } else {
+                           alert('Error deleteTopic: HTTP status ' + jqXHR.status);
+                       }
+                   }
+               })
+    },
+
+    login: function (device) {
+        if (device == null) {
+            return;
+        }
+        console.log("login: device.uuid = " + device.uuid);
+        var url = this._baseUrl + "device-uuid/" + device.uuid;
+        $.ajax({
+                   type: "GET",
+                   url: url,
+                   datatype: "jsonp",
+                   success: function (deviceTO) {
+                       console.log("Successfully fetched device.");
+                       leanbean._handleLoginExistingDevice(deviceTO);
+                   },
+                   error: function (xhr, ajaxOptions, thrownError) {
+                       if (xhr.status == 404) {
+                           console.log('Error login: HTTP status ' + xhr.status);
+                           var deviceTO = {
+                               platform: device.platform,
+                               version: device.version,
+                               uuid: device.uuid,
+                               cordova: device.cordova,
+                               model: device.model
+                           }
+                           leanbean._handleLoginNewDevice(deviceTO);
+                       } else {
+                           alert('Error login: HTTP status ' + xhr.status);
+                       }
+
+                   }
+               })
+    }
+
+};
+
+var testData =
+{
+    "id": 1,
+    "title": "Weekly Manager Meeting",
+    "topics": [
+        {
+            "id": 2,
+            "device": {
+                "id": 2,
+                "alias": "Bob",
+                "model": null,
+                "cordova": null,
+                "platform": null,
+                "uuid": null,
+                "version": null
+            },
+            "title": "Risk of developer churn",
+            "pitch": "This is a short pitch of Risk of developer churn.",
+            "votes": [
+                {
+                    "id": 5,
+                    "device": {
+                        "id": 3,
+                        "alias": "Carol",
+                        "model": null,
+                        "cordova": null,
+                        "platform": null,
+                        "uuid": null,
+                        "version": null
+                    }
+                },
+                {
+                    "id": 2,
+                    "device": {
+                        "id": 1,
+                        "alias": "Alice",
+                        "model": null,
+                        "cordova": null,
+                        "platform": null,
+                        "uuid": null,
+                        "version": null
+                    }
+                },
+                {
+                    "id": 3,
+                    "device": {
+                        "id": 2,
+                        "alias": "Bob",
+                        "model": null,
+                        "cordova": null,
+                        "platform": null,
+                        "uuid": null,
+                        "version": null
+                    }
+                }
+            ]
         },
-        "duration": 0,
-        "startDateTime": null
-    };
-    $.ajax({
-               headers: {
-                   'Accept': 'application/json',
-                   'Content-Type': 'application/json'
-               },
-               type: "POST",
-               url: url,
-               datatype: "jsonp",
-               data: {action : 'add-meeting', formData : $('#add-meeting-form').serialize()},
-               success: function () {
-                   console.log("Successfully posted meeting.");
-               }
-           })
-}
-
-/*
-$("#join-meeting-button").click(function(){
-    meeting_id = $("#join-meeting-id").val();
-    settingsObject = { "meeting_id" : meeting_id } //put settings in an object
-    localStorage.setItem('settings', JSON.stringify(settingsObject)); //store string in localSettings}
-);
-
-function storeMeetingId() {
-  // store some data
-  if(typeof(Storage)!=="undefined") {
-    localStorage.setItem("meeting_id", 1);         
-  }
-  $(":mobile-pagecontainer").pagecontainer("change", "#meeting", { 
-    transition: 'slide'
-  });    
-}
-
-function getMeetingId() {
-    var meeting_id = localStorage.getItem("meeting_id");
-    $('#meeting_id').html('Meeting ' + meeting_id);
-}
-
-$(document).on("pagecreate", "#join-meeting", function() {
-    $(":mobile-pagecontainer").on('pagecontainerbeforechange', function (event, ui) {
-
-        alert("Test 1");
-    });
-});
-/*
-$(document).on("pagecontainerbeforechange", function(e, data) {
-      $(document).on('click', '#join-meeting-button', function() {     
-        // store some data
-        if(typeof(Storage)!=="undefined") {
-              localStorage.setItem("firstname="Dragan";
-              localStorage.lastname="Gaic";            
+        {
+            "id": 1,
+            "device": {
+                "id": 1,
+                "alias": "Alice",
+                "model": null,
+                "cordova": null,
+                "platform": null,
+                "uuid": null,
+                "version": null
+            },
+            "title": "Salary process update",
+            "pitch": "This is a short pitch of Salary process update.",
+            "votes": [
+                {
+                    "id": 1,
+                    "device": {
+                        "id": 1,
+                        "alias": "Alice",
+                        "model": null,
+                        "cordova": null,
+                        "platform": null,
+                        "uuid": null,
+                        "version": null
+                    }
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "device": {
+                "id": 2,
+                "alias": "Bob",
+                "model": null,
+                "cordova": null,
+                "platform": null,
+                "uuid": null,
+                "version": null
+            },
+            "title": "Autonomous teams",
+            "pitch": "This is a short pitch of Autonomous teams.",
+            "votes": [
+                {
+                    "id": 4,
+                    "device": {
+                        "id": 2,
+                        "alias": "Bob",
+                        "model": null,
+                        "cordova": null,
+                        "platform": null,
+                        "uuid": null,
+                        "version": null
+                    }
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "device": {
+                "id": 3,
+                "alias": "Carol",
+                "model": null,
+                "cordova": null,
+                "platform": null,
+                "uuid": null,
+                "version": null
+            },
+            "title": "Upcoming conference",
+            "pitch": "This is a short pitch of Upcoming conference.",
+            "votes": []
+        },
+        {
+            "id": 4,
+            "device": {
+                "id": 2,
+                "alias": "Bob",
+                "model": null,
+                "cordova": null,
+                "platform": null,
+                "uuid": null,
+                "version": null
+            },
+            "title": "Is our code tested good enough?",
+            "pitch": "This is a short pitch of Is our code tested good enough?",
+            "votes": []
         }
-        // Change page
-        if(typeof data.toPage == "object" && typeof data.absUrl == "undefined") {
-            data.toPage = $("#meeting");
-        }
-    });  
-
-
-});
-*/
+    ],
+    "device": {
+        "id": 1,
+        "alias": "Alice",
+        "model": null,
+        "cordova": null,
+        "platform": null,
+        "uuid": null,
+        "version": null
+    },
+    "duration": 0,
+    "startDateTime": null
+};

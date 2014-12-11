@@ -18,138 +18,197 @@
     under the License.
 -->
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi" />
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
+<head>
+    <meta charset="utf-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="msapplication-tap-highlight" content="no"/>
+    <meta name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
 
 
-        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
-        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
-        <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
 
-        <title>Hello World</title>
-    </head>
-    <body>
-        <!-- Start of first page -->
-        <div data-role="page" id="home">
-            <div data-role="header">
-                <h1>LeanBean</h1>
-            </div><!-- /header -->
+    <script type="text/javascript" charset="utf-8">
 
-            <div role="main" class="ui-content">
-                <a href="#join-meeting" class="ui-btn" data-transition="slide">Join Meeting</a>
-                <a href="#add-meeting" class="ui-btn" data-transition="slide">Add Meeting</a>
-            </div><!-- /content -->
+        document.addEventListener('deviceready', this.onDeviceReady, false);
 
-            <div data-role="footer">
-                <h4>Page Footer</h4>
-            </div><!-- /footer -->
-        </div><!-- /page -->
+        // Event handlers
+        function onDeviceReady() {
+            leanbeanClient.login(device);
+        }
 
+        function handleOpenURL(url) {
+            alert(url);
+        }
+    </script>
+    <title>LeanBean</title>
+</head>
+<body>
+<!-- Start of first page -->
+<div data-role="page" id="home">
 
-        <!-- Start of join meeting page -->
-        <div data-role="page" id="join-meeting">
+    <div data-role="popup" id="home-device-add" data-theme="a" class="ui-corner-all"
+         data-dismissible="false">
+        <a href="#" data-rel="back"
+           class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-left">Close</a>
 
-            <div data-role="header">
-                <h1>Join Meeting</h1><a href="#home" class="ui-btn-left" data-transition="slide" data-direction="reverse">Home</a>
-            </div><!-- /header -->
+        <form id="home-device-add-form">        
+                        <h3>What do you want to be called?</h3>
+                        <label for="home-device-add-alias" class="ui-hidden-accessible">Alias:</label>
+                        <input type="text" name="alias" id="home-device-add-alias" value=""
+                               placeholder="Alias" data-theme="a" data-mini="true">
+            <button type="submit"
+                    class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check ui-mini"
+                    id="home-device-add-button">
+                Save
+            </button>
+        </form>
+    </div>
+    <!-- / home-device-add popup -->
 
-            <div role="main" class="ui-content">
-                <form id="join-meeting-form" method="post">
-                    <div data-role="fieldcontain">
-                        <label for="join-meeting-id" >Title</label>
-                        <input type="text" name="join-meeting-id" id="join-meeting-id" value="" placeholder="Meeting id" />
-                    </div>
-                    <div data-role="fieldcontain" class="ui-hidden-accessible">
-                        <label for="join-meeting-userid">Username:</label>
-                        <input type="hidden" name="join-meeting-userid" id="join-meeting-userid" value="1" />
-                    </div>
-                    <input type="button" name="join-meeting-button" id="join-meeting-button" value="Join meeting" />
-                </form>
-            </div><!-- /content -->
+    <div data-role="panel" data-position="left" data-display="reveal" data-theme="a" id="home-settings">
+        <form>
+            <h2>Settings</h2>
+            <label for="home-settings-alias">Alias:</label>
+            <input name="alias" id="home-settings-alias" value="" data-clear-btn="true" data-mini="true"
+                   type="text" placeholder="Alias">
 
-            <div data-role="footer">
-                <h4>Page Footer</h4>
-            </div><!-- /footer -->
-        </div><!-- /page -->
+            <div class="ui-grid-a">
+                <div class="ui-block-b">
+                    <a href="#" data-rel="close"
+                       class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-mini" id="home-settings-alias-button">Save</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- / home-settings panel -->
 
-        <!-- Start of meeting page -->
-        <div data-role="page" id="meeting">
+    <div data-role="panel" data-position="right" data-display="reveal" data-theme="a"
+         id="home-meeting-add">
+        <form id="home-meeting-add-form">
+            <h2>New Lean Coffee</h2>
 
-            <div data-role="header">
-                <h1>Meeting <span id="meeting_id"></span></h1><a href="#join-meeting" class="ui-btn-left" data-transition="slide" data-direction="reverse">Meetings</a>
-            </div><!-- /header -->
+            <div data-role="fieldcontain" class="ui-hide-label">
+                <label for="home-meeting-add-title">Title</label>
+                <input type="text" name="title" id="home-meeting-add-title" value=""
+                       data-clear-btn="true"
+                       placeholder="Lean Coffee Title" data-mini="true"/>
+            </div>
+            <a href="#" id="home-meeting-add-button" data-rel="close"
+               class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-mini">Add Lean Coffee</a>
+        </form>
+    </div>
+    <!-- / home-meeting-add panel -->
 
-            <div role="main" class="ui-content">
-                <div id="meeting-header"></div>
-                <div class="column" id="topics-container"></div>
-            </div><!-- /content -->
+    <div data-role="header">
+        <a href="#home-settings" class="ui-btn-left" data-icon="bars" data-iconpos="notext">Settings</a>
 
-            <div data-role="footer">
-                <h4>Page Footer</h4>
-            </div><!-- /footer -->
-        </div><!-- /page -->
+        <h1>LeanBean</h1>
+        <a href="#home-meeting-add" class="ui-btn-right" data-icon="plus" data-iconpos="notext">Add
+            Lean Coffee</a>
+    </div>
+    <!-- /home header -->
 
-        <!-- Start of add meeting page -->
-        <div data-role="page" id="add-meeting">
+    <div role="main" class="ui-content">
+        <form id="home-meeting-join-form" method="post">
+            <div data-role="fieldcontain" class="ui-hide-label">
+                <label for="home-meeting-join-id">Lean Coffee ID</label>
+                <input type="number" name="meetingId" id="home-meeting-join-id" value=""
+                       placeholder="Lean Coffee ID"/>
+            </div>
+            <input type="button" name="home-meeting-join-button" id="home-meeting-join-button"
+                   value="Join meeting"/>
+        </form>
+    </div>
+    <!-- /home content -->
 
-            <div data-role="header">
-                <h1>Add Meeting</h1><a href="#home" class="ui-btn-left" data-transition="slide" data-direction="reverse">Home</a>
-            </div><!-- /header -->
+</div>
+<!-- / home page -->
 
-            <div role="main" class="ui-content">
-                <form id="add-meeting-form" method="post">
-                    <div data-role="fieldcontain">
-                        <label for="add-meeting-title" >Title</label>
-                        <input type="text" name="add-meeting-title" id="add-meeting-title" value="" placeholder="Meeting title" />
-                    </div>
-                    <div data-role="fieldcontain" class="ui-hidden-accessible">
-                        <label for="add-meeting-userid">Username:</label>
-                        <input type="hidden" name="add-meeting-userid" id="add-meeting-userid" value="1" />
-                    </div>
-                    <input type="button" name="add-meeting-submit" id="add-meeting-submit" value="Add meeting" onclick="postMeeting()" />
-                </form>
-            </div><!-- /content -->
+<!-- Start of meeting page -->
+<div data-role="page" id="meeting">
 
-            <div data-role="footer">
-                <h4>Page Footer</h4>
-            </div><!-- /footer -->
-        </div><!-- /page -->
+    <div data-role="panel" data-position="right" data-display="reveal" data-theme="a"
+         id="meeting-topic-add">
+        <form id="meeting-topic-add-form" method="post">
+            <h2>New topic</h2>
 
-        <!-- Start of add topic page -->
-        <div data-role="page" id="add-topic">
+            <div data-role="fieldcontain">
+                <label for="meeting-topic-add-title">Title</label>
+                <input type="text" name="title" id="meeting-topic-add-title" value=""
+                       placeholder="Topic title" autocapitalize="on"/>
+            </div>
+            <div data-role="fieldcontain">
+                <label for="meeting-topic-add-pitch">Pitch</label>
+                <input type="text" name="pitch" id="meeting-topic-add-pitch" value=""
+                       placeholder="Topic pitch"/>
+            </div>
+            <input type="button" name="submit" id="meeting-topic-add-button" value="Add topic"/>
+        </form>
+        <form id="meeting-facilitate-form" method="post">
+                
+            <div data-role="fieldcontain">
+                        <label for="meeting-facilitate-checkbox">Facilitator</label>
+                        <select name="isFacilitator" id="meeting-facilitate-checkbox"
+                                data-role="flipswitch">
+                            
+                <option value="off">Off</option>
+                            
+                <option value="on">On</option>
+                        </select>
+            </div>
+        </form>
 
-            <div data-role="header">
-                <h1>Add Topic</h1><a href="#add-meeting" class="ui-btn-left" data-transition="slide" data-direction="reverse">Meeting</a>
-            </div><!-- /header -->
+    </div>
+    <!-- / meeting-topic-add panel -->
 
-            <div role="main" class="ui-content">
-                <form id="add-topic-form" method="post">
-                    <div data-role="fieldcontain">
-                        <label for="add-topic-title" >Title</label>
-                        <input type="text" name="add-topic-title" id="add-topic-title" value="" placeholder="Topic title" />
-                    </div>
-                    <div data-role="fieldcontain">
-                        <label for="add-topic-pitch" >Title</label>
-                        <input type="text" name="add-topic-pitch" id="add-topic-pitch" value="" placeholder="Topic pitch" />
-                    </div>
-                    <div data-role="fieldcontain" class="ui-hidden-accessible">
-                        <label for="add-topic-userid">Username:</label>
-                        <input type="hidden" name="add-topic-userid" id="add-topic-userid" value="1" />
-                    </div>
-                    <input type="button" name="add-topic-submit" id="add-topic-submit" value="Add topic" />
-                </form>
-            </div><!-- /content -->
+    <div data-role="popup" id="meeting-topic-delete" data-theme="a" class="ui-corner-all"
+         data-dismissible="false">
+            
+        <div data-role="header" data-theme="a">
+                <h1>Delete Topic?</h1>
+                
+        </div>
+            
+        <div role="main" class="ui-content">
+                    <h3 class="ui-title">Are you sure you want to delete this topic?</h3>
+                <p>This action cannot be undone.</p>
+                    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a"
+                       data-rel="back">Cancel</a>
+                    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-a"
+                       data-rel="back" data-transition="flow" id="meeting-topic-delete-button">Delete</a>
+                
+        </div>
+    </div>
+    <!-- / meeting-topic-delete popup -->
 
-            <div data-role="footer">
-                <h4>Page Footer</h4>
-            </div><!-- /footer -->
-        </div><!-- /page -->
+    <div data-role="header">
+        <a href="#home" class="ui-btn-left" data-icon="arrow-l" data-iconpos="notext">Home</a>
+
+        <h2><span id="meeting-header-text"></span></h2>
+        <a href="#meeting-topic-add" class="ui-btn-right" data-icon="plus" data-iconpos="notext">Add
+            topic</a>
+    </div>
+    <!-- / meeting header -->
+
+    <div role="main" class="ui-content">
+        <div id="meeting-topic-set" class="w-collapsible-set"></div>
+    </div>
+    <!-- / meeting content -->
+
+    <div data-role="footer" data-position="fixed">
+        <h2><span id="meeting-footer-text"></span></h2>
+    </div>
+    <!-- / meeting footer -->
+
+</div>
+<!-- / meeting page -->
 
 <!--
         <div class="app">
@@ -160,7 +219,7 @@
             </div>
         </div>
         <script type="text/javascript" src="cordova.js"></script>
-        
+
 -->
-    </body>
+</body>
 </html>

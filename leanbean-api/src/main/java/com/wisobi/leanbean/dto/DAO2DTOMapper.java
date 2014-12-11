@@ -2,7 +2,7 @@ package com.wisobi.leanbean.dto;
 
 import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.entity.Topic;
-import com.wisobi.leanbean.jpa.entity.User;
+import com.wisobi.leanbean.jpa.entity.Device;
 import com.wisobi.leanbean.jpa.entity.Vote;
 
 import java.util.HashSet;
@@ -21,18 +21,22 @@ public class DAO2DTOMapper {
     meetingViewTO.setDuration(meeting.getDuration());
     meetingViewTO.setStartDateTime(meeting.getStartDateTime());
 
-    meetingViewTO.setUser(mapUser(meeting.getUser()));
+    meetingViewTO.setDevice(mapDevice(meeting.getDevice()));
     meetingViewTO.setTopics(mapTopics(meeting.getTopics()));
 
     return meetingViewTO;
   }
 
-  public static UserViewTO mapUser(User user) {
-    UserViewTO userViewTO = new UserViewTO();
-    userViewTO.setId(user.getId());
-    userViewTO.setName(user.getName());
-    userViewTO.setEmail(user.getEmail());
-    return userViewTO;
+  public static DeviceTO mapDevice(Device device) {
+    DeviceTO deviceTO = new DeviceTO();
+    deviceTO.setId(device.getId());
+    deviceTO.setCordova(device.getCordova());
+    deviceTO.setModel(device.getModel());
+    deviceTO.setPlatform(device.getPlatform());
+    deviceTO.setAlias(device.getAlias());
+    deviceTO.setUuid(device.getUuid());
+    deviceTO.setVersion(device.getVersion());
+    return deviceTO;
   }
 
   public static TopicViewTO mapTopic(Topic topic) {
@@ -41,7 +45,7 @@ public class DAO2DTOMapper {
     topicViewTO.setTitle(topic.getTitle());
     topicViewTO.setPitch(topic.getPitch());
 
-    topicViewTO.setUser(mapUser(topic.getUser()));
+    topicViewTO.setDevice(mapDevice(topic.getDevice()));
     topicViewTO.setVotes(mapVotes(topic.getVotes()));
 
     return topicViewTO;
@@ -58,7 +62,7 @@ public class DAO2DTOMapper {
   public static VoteViewTO mapVote(Vote vote) {
     VoteViewTO voteViewTO = new VoteViewTO();
     voteViewTO.setId(vote.getId());
-    voteViewTO.setUser(mapUser(vote.getUser()));
+    voteViewTO.setDevice(mapDevice(vote.getDevice()));
     return voteViewTO;
   }
 

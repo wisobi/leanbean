@@ -3,9 +3,10 @@ package com.wisobi.leanbean.jpa;
 import com.wisobi.leanbean.LeanBeanDao;
 import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.entity.Topic;
-import com.wisobi.leanbean.jpa.entity.User;
+import com.wisobi.leanbean.jpa.entity.Device;
 import com.wisobi.leanbean.jpa.entity.Vote;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -37,9 +38,21 @@ public class LeanBeanJpaDao implements LeanBeanDao {
   }
 
   @Override
-  public User findByUserId(long userId) {
-    User user = em.find(User.class, userId);
-    return user;
+  public Device findByDeviceId(long deviceId) {
+    Device device = em.find(Device.class, deviceId);
+    return device;
+  }
+
+  @Override
+  public Device findByDeviceUUID(String deviceUUID) {
+    List resultList = em.createQuery("select d from Device d where uuid = :uuid")
+        .setParameter("uuid", deviceUUID)
+        .getResultList();
+    Device device = null;
+    if(!resultList.isEmpty()) {
+      device = (Device)resultList.get(0);
+    }
+    return device;
   }
 
   @Override
@@ -51,18 +64,19 @@ public class LeanBeanJpaDao implements LeanBeanDao {
   @Override
   public void addTopic(Topic topic) throws IllegalArgumentException {
 
-    // Verify that topic has referenced user that exists
-    if (topic.getUser() == null) {
+    // Verify that topic has referenced device that exists
+    if (topic.getDevice() == null) {
       throw new IllegalArgumentException(
-          "Missing data. Tried to add a topic without a referenced user.");
+          "Missing data. Tried to add a topic without a referenced device.");
     }
-    User user = findByUserId(topic.getUser().getId());
-    if (user == null) {
+    Device device = findByDeviceId(topic.getDevice().getId());
+    if (device == null) {
       throw new IllegalArgumentException(
-          "Inconsistent data. Tried to add a topic with a reference to user id " + topic.getUser()
+          "Inconsistent data. Tried to add a topic with a reference to device id " + topic
+              .getDevice()
               .getId() + " which cannot be found in data base.");
     }
-    topic.setUser(user);
+    topic.setDevice(device);
 
     // Verify that topic has referenced meeting that exists
     if (topic.getMeeting() == null) {
@@ -79,7 +93,7 @@ public class LeanBeanJpaDao implements LeanBeanDao {
 
     // Merge and persist
     em.getTransaction().begin();
-    em.merge(user);
+    em.merge(device);
     em.merge(meeting);
     em.persist(topic);
     // Set the bidirectional relationships once the topic is persisted
@@ -88,57 +102,57 @@ public class LeanBeanJpaDao implements LeanBeanDao {
   }
 
   @Override
-  public void addUser(User user) {
+  public void addDevice(Device device) {
     em.getTransaction().begin();
-    em.persist(user);
+    em.persist(device);
     em.getTransaction().commit();
   }
 
   @Override
   public void addMeeting(Meeting meeting) throws IllegalArgumentException {
 
-    // Verify that meeting has referenced user that exists
-    if (meeting.getUser() == null) {
+    // Verify that meeting has referenced device that exists
+    if (meeting.getDevice() == null) {
       throw new IllegalArgumentException(
-          "Missing data. Tried to add a meeting without a referenced user.");
+          "Missing data. Tried to add a meeting without a referenced device.");
     }
-    User user = findByUserId(meeting.getUser().getId());
-    if (user == null) {
+    Device device = findByDeviceId(meeting.getDevice().getId());
+    if (device == null) {
       throw new IllegalArgumentException(
-          "Inconsistent data. Tried to add a meeting with a reference to user id " + meeting
-              .getUser().getId() + " which cannot be found in data base.");
+          "Inconsistent data. Tried to add a meeting with a reference to device id " + meeting
+              .getDevice().getId() + " which cannot be found in data base.");
     }
-    meeting.setUser(user);
+    meeting.setDevice(device);
 
     // Merge and persist
     em.getTransaction().begin();
-    em.merge(user);
+    em.merge(device);
     em.persist(meeting);
     em.getTransaction().commit();
   }
 
   @Override
-  public void addVote(Vote vote) throws IllegalArgumentException{
+  public void addVote(Vote vote) throws IllegalArgumentException {
 
-    // Verify that vote has referenced user that exists
-    if(vote.getUser() == null) {
+    // Verify that vote has referenced device that exists
+    if (vote.getDevice() == null) {
       throw new IllegalArgumentException(
-          "Missing data. Tried to add a vote without a referenced user.");
+          "Missing data. Tried to add a vote without a referenced device.");
     }
-    User user = findByUserId(vote.getUser().getId());
-    if(user == null) {
+    Device device = findByDeviceId(vote.getDevice().getId());
+    if (device == null) {
       throw new IllegalArgumentException(
-          "Inconsistent data. Tried to add a vote with a reference to user id " + vote
-              .getUser().getId() + " which cannot be found in data base.");
+          "Inconsistent data. Tried to add a vote with a reference to device id " + vote
+              .getDevice().getId() + " which cannot be found in data base.");
     }
 
     // Verify that vote has referenced topic that exists
-    if(vote.getTopic() == null) {
+    if (vote.getTopic() == null) {
       throw new IllegalArgumentException(
           "Missing data. Tried to add a vote without a referenced topic.");
     }
     Topic topic = findByTopicId(vote.getTopic().getId());
-    if(topic == null) {
+    if (topic == null) {
       throw new IllegalArgumentException(
           "Inconsistent data. Tried to add a vote with a reference to topic id " + vote
               .getTopic().getId() + " which cannot be found in data base.");
@@ -146,11 +160,38 @@ public class LeanBeanJpaDao implements LeanBeanDao {
 
     // Merge and persist
     em.getTransaction().begin();
-    em.merge(user);
+    em.merge(device);
     em.merge(topic);
     em.persist(vote);
     // Set the bidirectional relationships once the vote is persisted
     topic.addVote(vote);
     em.getTransaction().commit();
+  }
+
+  @Override
+  public void deleteTopic(long topicId) throws IllegalArgumentException {
+    Topic topic = em.find(Topic.class, topicId);
+    if (topic == null) {
+      throw new IllegalArgumentException(
+          "Inconsistent data. Tried to remove a topic with topic id " + topicId
+          + " which cannot be found in data base.");
+    }
+    em.getTransaction().begin();
+    em.remove(topic);
+    em.getTransaction().commit();
+  }
+
+  @Override
+  public Device updateDevice(Device device) throws IllegalArgumentException {
+    if (device == null || !(device.getId() > 0)) {
+      throw new IllegalArgumentException(
+          "Missing data. Tried to update a device without device id.");
+    }
+
+    em.getTransaction().begin();
+    Device returnDevice = em.merge(device);
+    em.getTransaction().commit();
+
+    return returnDevice;
   }
 }

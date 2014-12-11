@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class VoteViewTO implements Serializable {
 
   private long id;
-  private UserViewTO user;
+  private DeviceTO device;
 
   public VoteViewTO() {
 
@@ -22,11 +22,7 @@ public class VoteViewTO implements Serializable {
     this.id = id;
   }
 
-  public UserViewTO getUser() {
-    return user;
-  }
+  public DeviceTO getDevice() { return device; }
 
-  public void setUser(UserViewTO user) {
-    this.user = user;
-  }
+  public void setDevice(DeviceTO device) { this.device = device; }
 }

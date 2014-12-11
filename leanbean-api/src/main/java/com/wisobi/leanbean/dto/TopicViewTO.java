@@ -1,5 +1,7 @@
 package com.wisobi.leanbean.dto;
 
+import com.wisobi.leanbean.jpa.entity.Device;
+
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Set;
@@ -9,8 +11,22 @@ import java.util.Set;
  */
 public class TopicViewTO implements Serializable {
 
+  public static Comparator<TopicViewTO> TopicVoteComparator = new Comparator<TopicViewTO>() {
+
+    public int compare(TopicViewTO t1, TopicViewTO t2) {
+      if (t1.getId() == t2.getId()) {
+        return 0;
+      }
+      if (t1.numVotes() > t2.numVotes()) {
+        return -1;
+      } else {
+        return 1;
+      }
+    }
+
+  };
   private long id;
-  private UserViewTO user;
+  private DeviceTO device;
   private String title;
   private String pitch;
   private Set<VoteViewTO> votes;
@@ -23,13 +39,9 @@ public class TopicViewTO implements Serializable {
     this.id = id;
   }
 
-  public UserViewTO getUser() {
-    return user;
-  }
+  public DeviceTO getDevice() { return device; }
 
-  public void setUser(UserViewTO user) {
-    this.user = user;
-  }
+  public void setDevice(DeviceTO device) { this.device = device; }
 
   public String getTitle() {
     return title;
@@ -58,19 +70,4 @@ public class TopicViewTO implements Serializable {
   public int numVotes() {
     return this.votes == null ? 0 : this.votes.size();
   }
-
-  public static Comparator<TopicViewTO> TopicVoteComparator = new Comparator<TopicViewTO>() {
-
-    public int compare(TopicViewTO t1, TopicViewTO t2) {
-      if (t1.getId() == t2.getId()) {
-        return 0;
-      }
-      if (t1.numVotes() > t2.numVotes()) {
-        return -1;
-      } else  {
-        return 1;
-      }
-    }
-
-  };
 }

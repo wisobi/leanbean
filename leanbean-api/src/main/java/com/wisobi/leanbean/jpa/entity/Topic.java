@@ -25,7 +25,7 @@ import javax.persistence.Table;
 public class Topic implements Serializable {
 
   private long id;
-  private User user;
+  private Device device;
   private String title;
   private String pitch;
   private Set<Vote> votes;
@@ -34,8 +34,8 @@ public class Topic implements Serializable {
   public Topic() {
   }
 
-  public Topic(String title, String pitch, Meeting meeting, User user) {
-    this.user = user;
+  public Topic(String title, String pitch, Meeting meeting, Device device) {
+    this.device = device;
     this.title = title;
     this.pitch = pitch;
     this.meeting = meeting;
@@ -52,13 +52,13 @@ public class Topic implements Serializable {
   }
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id")
-  public User getUser() {
-    return user;
+  @JoinColumn(name = "device_id")
+  public Device getDevice() {
+    return device;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setDevice(Device device) {
+    this.device = device;
   }
 
   public String getTitle() {

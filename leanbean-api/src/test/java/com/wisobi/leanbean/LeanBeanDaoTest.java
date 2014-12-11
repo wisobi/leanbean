@@ -3,7 +3,7 @@ package com.wisobi.leanbean;
 import com.wisobi.leanbean.jpa.LeanBeanJpaDao;
 import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.entity.Topic;
-import com.wisobi.leanbean.jpa.entity.User;
+import com.wisobi.leanbean.jpa.entity.Device;
 import com.wisobi.leanbean.jpa.entity.Vote;
 
 import org.junit.After;
@@ -34,79 +34,95 @@ public class LeanBeanDaoTest {
 
     dao = new LeanBeanJpaDao();
 
-    User user1 = new User();
-    user1.setName("Alice");
-    user1.setEmail("alice@wisobi.com");
-    dao.addUser(user1);
+    Device device1 = new Device();
+    device1.setAlias("Alice");
+    device1.setModel("Android SDK built for x86");
+    device1.setCordova("3.6.4");
+    device1.setPlatform("Android");
+    device1.setUuid("1ab9f8483ab42ef1");
+    device1.setVersion("4.4.2");
+    dao.addDevice(device1);
 
-    User user2 = new User();
-    user2.setName("Bob");
-    user2.setEmail("bob@wisobi.com");
-    dao.addUser(user2);
+    Device device2 = new Device();
+    device2.setAlias("Bob");
+    device2.setModel("Android SDK built for x86");
+    device2.setCordova("3.6.4");
+    device2.setPlatform("Android");
+    device2.setUuid("1ab9f8483ab42ef2");
+    device2.setVersion("4.4.2");
+    dao.addDevice(device2);
 
-    User user3 = new User();
-    user3.setName("Carol");
-    user3.setEmail("carol@wisobi.com");
-    dao.addUser(user3);
+    Device device3 = new Device();
+    device3.setAlias("Carol");
+    device3.setModel("Android SDK built for x86");
+    device3.setCordova("3.6.4");
+    device3.setPlatform("Android");
+    device3.setUuid("1ab9f8483ab42ef3");
+    device3.setVersion("4.4.2");
+    dao.addDevice(device3);
 
-    User user4 = new User();
-    user4.setName("Dave");
-    user4.setEmail("dave@wisobi.com");
-    dao.addUser(user4);
+    Device device4 = new Device();
+    device4.setAlias("Dave");
+    device4.setModel("Android SDK built for x86");
+    device4.setCordova("3.6.4");
+    device4.setPlatform("Android");
+    device4.setUuid("1ab9f8483ab42ef4");
+    device4.setVersion("4.4.2");
+    dao.addDevice(device4);
 
-    Meeting meeting1 = new Meeting("Weekly Manager Meeting", user1);
+    Meeting meeting1 = new Meeting("Weekly Manager Meeting", device1);
     dao.addMeeting(meeting1);
 
-    Meeting meeting2 = new Meeting("Department Meeting", user2);
+    Meeting meeting2 = new Meeting("Department Meeting", device2);
     dao.addMeeting(meeting2);
 
     // Topics for meeting 1
     Topic
         topic1 =
         new Topic("Salary process update", "This is a short pitch of Salary process update.",
-                  meeting1, user1);
+                  meeting1, device1);
     dao.addTopic(topic1);
     System.out.println("setUp(): Topic1 id = " + topic1.getId());
 
     Topic
         topic2 =
         new Topic("Risk of developer churn", "This is a short pitch of Risk of developer churn.",
-                  meeting1, user2);
+                  meeting1, device2);
     dao.addTopic(topic2);
 
     Topic
         topic3 =
         new Topic("Autonomous teams", "This is a short pitch of Autonomous teams.", meeting1,
-                  user2);
+                  device2);
     dao.addTopic(topic3);
 
     Topic
         topic4 =
         new Topic("Is our code tested good enough?",
-                  "This is a short pitch of Is our code tested good enough?", meeting1, user2);
+                  "This is a short pitch of Is our code tested good enough?", meeting1, device2);
     dao.addTopic(topic4);
 
     Topic
         topic5 =
         new Topic("Upcoming conference", "This is a short pitch of Upcoming conference.", meeting1,
-                  user3);
+                  device3);
     dao.addTopic(topic5);
 
     // Topics for meeting 2
     Topic
         topic6 =
         new Topic("New  meeting, new topic", "This is a short pitch of New meeting.", meeting2,
-                  user1);
+                  device1);
     dao.addTopic(topic6);
 
     // Votes for meeting 1
-    Vote vote1 = new Vote(user1, topic1);
+    Vote vote1 = new Vote(device1, topic1);
     dao.addVote(vote1);
-    Vote vote2 = new Vote(user1, topic2);
+    Vote vote2 = new Vote(device1, topic2);
     dao.addVote(vote2);
-    Vote vote3 = new Vote(user2, topic2);
+    Vote vote3 = new Vote(device2, topic2);
     dao.addVote(vote3);
-    Vote vote4 = new Vote(user2, topic3);
+    Vote vote4 = new Vote(device2, topic3);
     dao.addVote(vote4);
 
   }
@@ -147,24 +163,24 @@ public class LeanBeanDaoTest {
   }
 
   @Test
-  public void testMeetingUser() {
+  public void testMeetingDevice() {
     Meeting meeting = dao.findByMeetingId(1);
-    User user = meeting.getUser();
-    logger.debug("Meeting Id: " + meeting.getId() + ", user: " + user.getName());
-    assertNotNull(user);
-    assertEquals("Alice", user.getName());
+    Device device = meeting.getDevice();
+    logger.debug("Meeting Id: " + meeting.getId() + ", username: " + device.getAlias());
+    assertNotNull(device);
+    assertEquals("Alice", device.getAlias());
   }
 
   @Test
-  public void testTopicUser() {
+  public void testTopicDevice() {
     Meeting meeting = dao.findByMeetingId(1);
     boolean tested = false;
     for (Topic topic : meeting.getTopics()) {
       if (topic.getId() == 1) {
-        User user = topic.getUser();
-        logger.debug("Topic Id: " + topic.getId() + ", user: " + user.getName());
-        assertNotNull(user);
-        assertEquals("Alice", user.getName());
+        Device device = topic.getDevice();
+        logger.debug("Topic Id: " + topic.getId() + ", username: " + device.getAlias());
+        assertNotNull(device);
+        assertEquals("Alice", device.getAlias());
         tested = true;
       }
     }
@@ -172,17 +188,17 @@ public class LeanBeanDaoTest {
   }
 
   @Test
-  public void testVoteUser() {
+  public void testVoteDevice() {
     Meeting meeting = dao.findByMeetingId(1);
     boolean tested = false;
     for (Topic topic : meeting.getTopics()) {
       if (topic.getId() == 1) {
         for (Vote vote : topic.getVotes()) {
           if (vote.getId() == 1) {
-            User user = vote.getUser();
-            logger.debug("Vote Id: " + vote.getId() + ", user: " + user.getName());
-            assertNotNull(user);
-            assertEquals("Alice", user.getName());
+            Device device = vote.getDevice();
+            logger.debug("Vote Id: " + vote.getId() + ", username: " + device.getAlias());
+            assertNotNull(device);
+            assertEquals("Alice", device.getAlias());
             tested = true;
           }
         }
@@ -196,40 +212,50 @@ public class LeanBeanDaoTest {
    */
 
   @Test(expected = IllegalArgumentException.class)
-  public void testAddMeetingWithNullUser() {
+  public void testAddMeetingWithNullDevice() {
     Meeting meeting = new Meeting("Review of Key Results", null);
     dao.addMeeting(meeting);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testAddMeetingWithInconsistentUser() {
-    User user = new User();
-    user.setId(1000);
+  public void testAddMeetingWithInconsistentDevice() {
+    Device device = new Device();
+    device.setId(1000);
 
-    Meeting meeting = new Meeting("Review of Key Results", user);
+    Meeting meeting = new Meeting("Review of Key Results", device);
     dao.addMeeting(meeting);
   }
 
   @Test
   public void testAddMeeting() {
-    User user = new User();
-    user.setId(1);
+    Device device = new Device();
+    device.setId(1);
 
-    Meeting meeting = new Meeting("Review of Key Results", user);
+    Meeting meeting = new Meeting("Review of Key Results", device);
     dao.addMeeting(meeting);
   }
 
   /*
-   * Test persistence and data consistency of User
+   * Test persistence and data consistency of Device
    */
 
   @Test
-  public void testAddUser() {
-    User user = new User();
-    user.setName("Eve");
-    user.setEmail("eve@wisobi.com");
+  public void testAddDevice() {
+    Device device = new Device();
+    device.setAlias("Eve");
+    device.setModel("Android SDK built for x86");
+    device.setCordova("3.6.4");
+    device.setPlatform("Android");
+    device.setUuid("1ab9f8483ab42ef5");
+    device.setVersion("4.4.2");
+    dao.addDevice(device);
+  }
 
-    dao.addUser(user);
+  @Test
+  public void testFindDeviceByUUID() {
+    Device device = dao.findByDeviceUUID("1ab9f8483ab42ef1");
+    assertNotNull(device);
+    assertEquals(1, device.getId());
   }
 
   /*
@@ -237,7 +263,7 @@ public class LeanBeanDaoTest {
    */
 
   @Test(expected = IllegalArgumentException.class)
-  public void testAddTopicWithNullUser() {
+  public void testAddTopicWithNullDevice() {
     Meeting meeting = new Meeting();
     meeting.setId(2);
 
@@ -246,48 +272,48 @@ public class LeanBeanDaoTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testAddTopicWithInconsistentUser() {
+  public void testAddTopicWithInconsistentDevice() {
     Meeting meeting = new Meeting();
     meeting.setId(2);
 
-    User user = new User();
-    user.setId(1000);
+    Device device = new Device();
+    device.setId(1000);
 
-    Topic topic = new Topic("Topic title", "This is a short pitch of Topic title", meeting, user);
+    Topic topic = new Topic("Topic title", "This is a short pitch of Topic title", meeting, device);
     dao.addTopic(topic);
 
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddTopicWithNullMeeting() {
-    User user = new User();
-    user.setId(1);
+    Device device = new Device();
+    device.setId(1);
 
-    Topic topic = new Topic("Topic Title", "This is a short pitch of Topic Title", null, user);
+    Topic topic = new Topic("Topic Title", "This is a short pitch of Topic Title", null, device);
     dao.addTopic(topic);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddTopicWithInconsistentMeeting() {
-    User user = new User();
-    user.setId(1);
+    Device device = new Device();
+    device.setId(1);
 
     Meeting meeting = new Meeting();
     meeting.setId(1000);
 
-    Topic topic = new Topic("Topic Title", "This is a short pitch of Topic Title", meeting, user);
+    Topic topic = new Topic("Topic Title", "This is a short pitch of Topic Title", meeting, device);
     dao.addTopic(topic);
   }
 
   @Test
   public void testAddTopic() {
-    User user = new User();
-    user.setId(1);
+    Device device = new Device();
+    device.setId(1);
 
     Meeting meeting = new Meeting();
     meeting.setId(2);
 
-    Topic topic = new Topic("Topic title", "This is a short pitch of Topic Title", meeting, user);
+    Topic topic = new Topic("Topic title", "This is a short pitch of Topic Title", meeting, device);
     dao.addTopic(topic);
   }
 
@@ -295,7 +321,7 @@ public class LeanBeanDaoTest {
    * Test persistence and data consistency of Vote
    */
   @Test(expected = IllegalArgumentException.class)
-  public void testAddVoteWithNullUser() {
+  public void testAddVoteWithNullDevice() {
     Topic topic = new Topic();
     topic.setId(1);
 
@@ -304,47 +330,47 @@ public class LeanBeanDaoTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testAddVoteWithInconsistentUser() {
+  public void testAddVoteWithInconsistentDevice() {
     Topic topic = new Topic();
     topic.setId(1);
 
-    User user = new User();
-    user.setId(1000);
+    Device device = new Device();
+    device.setId(1000);
 
-    Vote vote = new Vote(user, topic);
+    Vote vote = new Vote(device, topic);
     dao.addVote(vote);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddVoteWithNullTopic() {
-    User user = new User();
-    user.setId(1);
+    Device device = new Device();
+    device.setId(1);
 
-    Vote vote = new Vote(user, null);
+    Vote vote = new Vote(device, null);
     dao.addVote(vote);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddVoteWithInconsistentTopic() {
-    User user = new User();
-    user.setId(1);
+    Device device = new Device();
+    device.setId(1);
 
     Topic topic = new Topic();
     topic.setId(1000);
 
-    Vote vote = new Vote(user, topic);
+    Vote vote = new Vote(device, topic);
     dao.addVote(vote);
   }
 
   @Test
   public void addVote() {
-    User user = new User();
-    user.setId(1);
+    Device device = new Device();
+    device.setId(1);
 
     Topic topic = new Topic();
     topic.setId(6);
 
-    Vote vote = new Vote(user, topic);
+    Vote vote = new Vote(device, topic);
     dao.addVote(vote);
   }
 

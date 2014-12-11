@@ -13,7 +13,7 @@ public class MeetingViewTO implements Serializable {
   private long id;
   private String title;
   private Set<TopicViewTO> topics = new HashSet<TopicViewTO>();
-  private UserViewTO user;
+  private DeviceTO device;
   private int duration;
   private Date startDateTime;
 
@@ -41,12 +41,12 @@ public class MeetingViewTO implements Serializable {
     this.topics = topics;
   }
 
-  public UserViewTO getUser() {
-    return user;
+  public DeviceTO getDevice() {
+    return device;
   }
 
-  public void setUser(UserViewTO user) {
-    this.user = user;
+  public void setDevice(DeviceTO device) {
+    this.device = device;
   }
 
   public int getDuration() {

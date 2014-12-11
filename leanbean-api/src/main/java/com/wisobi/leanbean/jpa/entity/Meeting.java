@@ -27,22 +27,22 @@ public class Meeting implements Serializable {
   private long id;
   private String title;
   private Set<Topic> topics = new HashSet<Topic>();
-  private User user;
+  private Device device;
   private int duration;
   private Date startDateTime;
 
   public Meeting() {
   }
 
-  public Meeting(String title, User user) {
+  public Meeting(String title, Device device) {
     this.title = title;
-    this.user = user;
+    this.device = device;
   }
 
 
-  public Meeting(String title, User user, int duration, Date startDateTime) {
+  public Meeting(String title, Device device, int duration, Date startDateTime) {
     this.title = title;
-    this.user = user;
+    this.device = device;
     this.duration = duration;
     this.startDateTime = startDateTime;
   }
@@ -83,13 +83,13 @@ public class Meeting implements Serializable {
   }
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id")
-  public User getUser() {
-    return user;
+  @JoinColumn(name = "device_id")
+  public Device getDevice() {
+    return device;
   }
 
-  public void setUser(User user) {
-    this.user = user;
+  public void setDevice(Device device) {
+    this.device = device;
   }
 
   public int getDuration() {
