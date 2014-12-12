@@ -1,8 +1,12 @@
 package com.wisobi.leanbean.restlet.resource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.wisobi.leanbean.LeanBeanDao;
 import com.wisobi.leanbean.dto.DTO2DAOMapper;
 import com.wisobi.leanbean.dto.TopicTO;
+import com.wisobi.leanbean.endpoint.MeetingEndpoint;
 import com.wisobi.leanbean.jpa.LeanBeanJpaDao;
 import com.wisobi.leanbean.jpa.entity.Topic;
 
@@ -39,13 +43,18 @@ public class TopicResource extends ServerResource {
         logger.error(e.getMessage());
       }
     }
+
+    logger.debug("addTopic() broadcastMeeting with meetingId = " + topic.getMeeting().getId());
+    MeetingEndpoint.broadcastMeeting(topic.getMeeting().getId());
   }
 
   @Delete
   public void deleteTopic() {
     long topicId = Long.parseLong(getRequestAttributes().get("topic-id").toString());
+    Topic topic;
     try {
-      dao.deleteTopic(topicId);
+      topic = dao.findByTopicId(topicId);
+      dao.deleteTopic(topic);
     } catch (Exception e) {
       logger.debug(e.getMessage());
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage(), e);
@@ -56,5 +65,8 @@ public class TopicResource extends ServerResource {
         logger.error(e.getMessage());
       }
     }
+
+    MeetingEndpoint.broadcastMeeting(topic.getMeeting().getId());
   }
+
 }

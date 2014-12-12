@@ -8,11 +8,11 @@ import java.util.Date;
  */
 public class MeetingTO implements Serializable {
 
-  public long id;
-  public String title;
-  public long userId;
-  public int duration;
-  public Date startDateTime;
+  private long id;
+  private String title;
+  private long deviceId;
+  private int duration;
+  private Date startDateTime;
 
   public MeetingTO() {
 
@@ -35,11 +35,11 @@ public class MeetingTO implements Serializable {
   }
 
   public long getDeviceId() {
-    return userId;
+    return deviceId;
   }
 
   public void setDeviceId(long deviceId) {
-    this.userId = deviceId;
+    this.deviceId = deviceId;
   }
 
   public int getDuration() {

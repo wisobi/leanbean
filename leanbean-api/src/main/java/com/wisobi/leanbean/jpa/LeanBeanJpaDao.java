@@ -58,6 +58,11 @@ public class LeanBeanJpaDao implements LeanBeanDao {
   @Override
   public Topic findByTopicId(long topicId) {
     Topic topic = em.find(Topic.class, topicId);
+    if (topic == null) {
+      throw new IllegalArgumentException(
+          "Inconsistent data. Tried to remove a topic with topic id " + topicId
+          + " which cannot be found in data base.");
+    }
     return topic;
   }
 
@@ -169,13 +174,7 @@ public class LeanBeanJpaDao implements LeanBeanDao {
   }
 
   @Override
-  public void deleteTopic(long topicId) throws IllegalArgumentException {
-    Topic topic = em.find(Topic.class, topicId);
-    if (topic == null) {
-      throw new IllegalArgumentException(
-          "Inconsistent data. Tried to remove a topic with topic id " + topicId
-          + " which cannot be found in data base.");
-    }
+  public void deleteTopic(Topic topic) throws IllegalArgumentException {
     em.getTransaction().begin();
     em.remove(topic);
     em.getTransaction().commit();

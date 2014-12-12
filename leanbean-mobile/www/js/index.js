@@ -1,3 +1,29 @@
+var _ws = new WebSocket("ws://api.leanbean.wisobi.com:8080/leanbean/ws/meeting/1");
+
+_ws.onerror = function(event) {
+
+}
+
+_ws.onclose = function(event) {
+
+}
+
+_ws.onmessage = function(event) {
+    var message = JSON.parse(event.data);
+    console.log("_ws.onmessage()");
+    console.log(message);
+    if(message.type == 'meetingview') {
+        leanbean._loadMeeting(message);
+    }
+
+}
+
+_ws.onopen = function(event) {
+
+}
+
+
+
 var leanbean = {
 
     _elements: {
@@ -121,14 +147,29 @@ var leanbean = {
         div.toggleClass("ui-btn-b");
         div.attr('checked', !div.attr('checked'));
 
-        var votedTopics = $('div.w-collapsible-heading div.ui-icon-user[checked="checked"]');
-        var notVotedTopics = $('div.w-collapsible-heading div.ui-icon-user:not([checked="checked"])');
-        if (votedTopics.length == 2) {
-            $(notVotedTopics).each(function (index) {
+        var votedTopicDivs = $('div.w-collapsible-heading div.ui-icon-user[checked="checked"]');
+        var notVotedTopicDivs = $('div.w-collapsible-heading div.ui-icon-user:not([checked="checked"])');
+
+        if (votedTopicDivs.length == 2) {
+            $(notVotedTopicDivs).each(function (index) {
                 $(this).addClass("ui-state-disabled");
             });
+
+            // Generate
+            var votedTopicIds = [];
+            for(var i = 0; i < votedTopicDivs.length; i++) {
+                // Example: id="meeting-topic-vote-button-5"
+                var topicId = $(votedTopicDivs[i]).attr('id').substr(26);
+                votedTopicIds.push(topicId);
+            }
+            var voteTO = {
+                deviceId: this._getSetting('device').id,
+                meetingId: this._getState().meetingId,
+                topicIds: votedTopicIds
+            }
+            leanbeanClient.postVote(voteTO);
         } else {
-            $(notVotedTopics).each(function (index) {
+            $(notVotedTopicDivs).each(function (index) {
                 $(this).removeClass("ui-state-disabled");
             });
         }
@@ -177,6 +218,7 @@ var leanbean = {
     },
 
     _loadMeeting: function (meeting) {
+        console.log("leanbean._loadMeeting(): loading meeting with id " + meeting.id);
         document.querySelector('#meeting-header-text').innerHTML = meeting.title;
         document.querySelector('#meeting-topic-set').innerHTML = '';
         for (var i = 0; i < meeting.topics.length; i++) {
@@ -474,8 +516,8 @@ var leanbeanClient = {
                    datatype: 'json',
                    data: topic,
                    success: function () {
-                       console.log("Successfully added topic. Reloading meeting ...")
-                       leanbean._getCurrentMeeting();
+                       console.log("Successfully added topic.")
+                       // leanbean._getCurrentMeeting();
                    }
                })
     },
@@ -490,7 +532,7 @@ var leanbeanClient = {
                    type: 'POST',
                    url: url,
                    datatype: 'json',
-                   data: vote,
+                   data: JSON.stringify(vote),
                    success: function () {
                        console.log("Successfully added vote.")
                    }

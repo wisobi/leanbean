@@ -19,7 +19,7 @@ public interface LeanBeanDao {
   public void addDevice(Device device) throws IllegalArgumentException;
   public void addMeeting(Meeting meeting) throws IllegalArgumentException;
   public void addVote(Vote vote) throws IllegalArgumentException;
-  public void deleteTopic(long topicId) throws IllegalArgumentException;
+  public void deleteTopic(Topic topic) throws IllegalArgumentException;
   public Device updateDevice(Device device) throws IllegalArgumentException;
   public void close() throws Exception;
 

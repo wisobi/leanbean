@@ -5,6 +5,9 @@ import com.wisobi.leanbean.jpa.entity.Topic;
 import com.wisobi.leanbean.jpa.entity.Device;
 import com.wisobi.leanbean.jpa.entity.Vote;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by bjork on 05/11/14.
  */
@@ -41,19 +44,25 @@ public class DTO2DAOMapper {
     return topic;
   }
 
-  public static Vote mapVote(VoteTO voteTO) {
-    Vote vote = new Vote();
-    vote.setId(voteTO.getId());
+  public static Set<Vote> mapVotes(VoteTO voteTO) {
+    Set<Vote> votes = new HashSet<Vote>();
 
-    Device device = new Device();
-    device.setId(voteTO.getDeviceId());
-    vote.setDevice(device);
+    for(long topicId : voteTO.getTopicIds()) {
+      Vote vote = new Vote();
+      vote.setId(voteTO.getId());
 
-    Topic topic = new Topic();
-    topic.setId(voteTO.getTopicId());
-    vote.setTopic(topic);
+      Device device = new Device();
+      device.setId(voteTO.getDeviceId());
+      vote.setDevice(device);
 
-    return vote;
+      Topic topic = new Topic();
+      topic.setId(topicId);
+      vote.setTopic(topic);
+
+      votes.add(vote);
+    }
+
+    return votes;
   }
 
   public static Device mapDevice(DeviceTO deviceTO) {

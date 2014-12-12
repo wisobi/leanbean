@@ -10,12 +10,17 @@ import java.util.Set;
  */
 public class MeetingViewTO implements Serializable {
 
+  private String type = "meetingview";
   private long id;
   private String title;
   private Set<TopicViewTO> topics = new HashSet<TopicViewTO>();
   private DeviceTO device;
   private int duration;
   private Date startDateTime;
+
+  public String getType() { return type; }
+
+  public void setType(String type) { this.type = type; }
 
   public long getId() {
     return id;

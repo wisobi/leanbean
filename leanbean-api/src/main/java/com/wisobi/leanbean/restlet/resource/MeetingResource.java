@@ -37,7 +37,10 @@ public class MeetingResource extends ServerResource {
   @Get("json")
   public MeetingViewTO findMeetingById() {
     long meetingId = Long.parseLong(getRequestAttributes().get("meeting-id").toString());
+    return findMeetingById(meetingId);
+  }
 
+  public MeetingViewTO findMeetingById(long meetingId) {
     Meeting meeting = dao.findByMeetingId(meetingId);
     try {
       dao.close();
