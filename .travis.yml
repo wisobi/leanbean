@@ -5,6 +5,15 @@ sudo: false
 jdk:
   - oraclejdk7
 
+before_install:
+  - npm install -g cordova
+  - cd leanbean-mobile
+  - cordova platform add android
+  - cordova platform add ios
+  - cordova plugin add org.apache.cordova.device
+  - cordova plugin add org.apache.cordova.statusbar
+  - cordova plugin add https://github.com/EddyVerbruggen/LaunchMyApp-PhoneGap-Plugin.git --variable URL_SCHEME=leanbean
+
 before_script:
   - mysql -e 'create database leanbean_test;'
 
@@ -12,3 +21,4 @@ script:
   - cd leanbean-api
   - mvn install -DskipTests=true
   - mvn test
+  - cordova build

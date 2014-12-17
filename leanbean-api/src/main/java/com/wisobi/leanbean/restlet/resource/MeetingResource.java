@@ -5,8 +5,8 @@ import com.wisobi.leanbean.dto.DAO2DTOMapper;
 import com.wisobi.leanbean.dto.DTO2DAOMapper;
 import com.wisobi.leanbean.dto.MeetingTO;
 import com.wisobi.leanbean.dto.MeetingViewTO;
-import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.LeanBeanJpaDao;
+import com.wisobi.leanbean.jpa.entity.Meeting;
 
 import org.restlet.data.Status;
 import org.restlet.resource.Get;
@@ -24,15 +24,6 @@ public class MeetingResource extends ServerResource {
   final static Logger logger = LoggerFactory.getLogger(MeetingResource.class);
 
   private LeanBeanDao dao = new LeanBeanJpaDao();
-
-  /*
-  @Get("json")
-  public Meeting findMeetingById() {
-    long meetingId = Long.parseLong(getRequestAttributes().get("meeting-id").toString());
-    Meeting meeting = dao.findByMeetingId(meetingId);
-    return meeting;
-  }
-  */
 
   @Get("json")
   public MeetingViewTO findMeetingById() {
@@ -73,6 +64,7 @@ public class MeetingResource extends ServerResource {
         logger.error(e.getMessage());
       }
     }
+
     return DAO2DTOMapper.mapMeeting(meeting);
   }
 }

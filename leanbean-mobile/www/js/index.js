@@ -1,5 +1,195 @@
 var _ws;
 
+var leanbeanClient = {
+
+    //_baseUrl: "http://10.0.2.2:8080/v1/",
+    _baseUrl: "http://api.leanbean.wisobi.com:8080/leanbean/v1/",
+
+    postDevice: function(device, successCallback) {
+        var url = this._baseUrl + "device/";
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'POST',
+                   url: url,
+                   datatype: 'json',
+                   data: JSON.stringify(device),
+                   success: function (deviceTO) {
+                       console.log("Successfully added device.");
+                       if (successCallback) successCallback(deviceTO);
+                   },
+                   error: function (jqXHR, textStatus, errorThrown) {
+                       if (jqXHR.status == 400) {
+                           alert('Error postDevice: HTTP status ' + jqXHR.status);
+                       } else {
+                           alert('Error postDevice: HTTP status ' + jqXHR.status);
+                       }
+                   }
+               })
+    },
+
+    putDevice: function(device, successCallback) {
+        var url = this._baseUrl + "device/" + device.id;
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'PUT',
+                   url: url,
+                   datatype: 'json',
+                   data: JSON.stringify(device),
+                   success: function (deviceTO) {
+                       console.log("Successfully updated device.");
+                       if (successCallback) successCallback(deviceTO);
+                       //leanbeanClient.login(deviceTO);
+                   },
+                   error: function (jqXHR, textStatus, errorThrown) {
+                       if (jqXHR.status == 400) {
+                           alert('Error putDevice: HTTP status ' + jqXHR.status);
+                       } else {
+                           alert('Error putDevice: HTTP status ' + jqXHR.status);
+                       }
+                   }
+               })
+    },
+
+    getMeeting: function (meetingId, successCallback, errorCallback) {
+        if (meetingId == '' || meetingId == null) {
+            return;
+        }
+        var url = this._baseUrl + "meeting/" + meetingId;
+        $.ajax({
+                   type: "GET",
+                   url: url,
+                   datatype: "json",
+                   success: function (meetingTO) {
+                       console.log("Successfully fetched meeting with id = " + meetingTO.id);
+                       if (successCallback) successCallback(meetingTO);
+                       //leanbean._loadMeeting(meetingTO);
+                   },
+                   error: function (jqXHR, ajaxOptions, thrownError) {
+                       if (jqXHR.status == 404) {
+                           alert('404: Could not find a Lean Coffee with ID ' + meetingId);
+                       } else {
+                           alert('Error _getMeeting: HTTP status ' + jqXHR.status);
+                       }
+                       if (errorCallback) errorCallback();
+                   }
+               })
+    },
+
+    postMeeting: function (meeting, successCallback) {
+        var url = this._baseUrl + "meeting/";
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'POST',
+                   url: url,
+                   datatype: 'json',
+                   data: JSON.stringify(meeting),
+                   success: function (meetingTO) {
+                       console.log("Successfully added meeting.");
+                       if(successCallback) successCallback(meetingTO);
+                   },
+                   error: function (jqXHR, textStatus, errorThrown) {
+                       if (jqXHR.status == 400) {
+                           alert('Error _postMeeting: HTTP status ' + jqXHR.status);
+                       } else {
+                           alert('Error _postMeeting: HTTP status ' + jqXHR.status);
+                       }
+                   }
+               })
+    },
+
+    postTopic: function (topic) {
+        var url = this._baseUrl + "topic/";
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'POST',
+                   url: url,
+                   datatype: 'json',
+                   data: JSON.stringify(topic),
+                   success: function () {
+                       console.log("Successfully added topic.");
+                       // leanbean._getAndLoadMeeting();
+                   }
+               })
+    },
+
+    putVote: function (vote) {
+        var url = this._baseUrl + "vote/" + vote.meetingId + "/" + vote.deviceId;
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'PUT',
+                   url: url,
+                   datatype: 'json',
+                   data: JSON.stringify(vote),
+                   success: function () {
+                       console.log("Successfully added vote.")
+                   }
+               })
+    },
+
+    deleteTopic: function(topicId) {
+        if (topicId == '' || topicId == null) {
+            return;
+        }
+        var url = this._baseUrl + "topic/" + topicId;
+        $.ajax({
+                   type: "DELETE",
+                   url: url,
+                   datatype: "json",
+                   success: function () {
+                       console.log("Successfully deleted topic with id = " + topicId);
+                   },
+                   error: function (jqXHR, ajaxOptions, thrownError) {
+                       if (jqXHR.status == 404) {
+                           alert('Error deleteTopic: HTTP status ' + jqXHR.status);
+                       } else {
+                           alert('Error deleteTopic: HTTP status ' + jqXHR.status);
+                       }
+                   }
+               })
+    },
+
+    _getDevice: function (deviceUuid, successCallback, errorCallback) {
+        console.log("_getDevice: device.uuid = " + deviceUuid);
+        var url = this._baseUrl + "device-uuid/" + deviceUuid;
+        $.ajax({
+                   type: "GET",
+                   url: url,
+                   datatype: "jsonp",
+                   success: function (deviceTO) {
+                       console.log("Successfully fetched device.");
+                       if (successCallback) successCallback(deviceTO);
+                       //leanbean._handleLoginExistingDevice(deviceTO);
+                   },
+                   error: function (xhr, ajaxOptions, thrownError) {
+                       if (xhr.status == 404) {
+                           console.log('Error _getDevice: HTTP status ' + xhr.status);
+                           if (errorCallback) errorCallback();
+                           //leanbean._handleLoginNewDevice(deviceTO);
+                       } else {
+                           alert('Error _getDevice: HTTP status ' + xhr.status);
+                       }
+
+                   }
+               })
+    }
+
+};
+
 var leanbean = {
 
     _elements: {
@@ -78,7 +268,7 @@ var leanbean = {
         deviceTO.uuid = device.uuid;
 
         this._setSetting("device", deviceTO);
-        leanbeanClient.postDevice(deviceTO);
+        leanbeanClient.postDevice(deviceTO, leanbean.login.bind(this));
     },
 
     _homeMeetingJoinButtonClick: function (event) {
@@ -90,7 +280,7 @@ var leanbean = {
     _homeMeetingAddButtonClick: function (event) {
         var meetingForm = this._formDataToJSON('#home-meeting-add-form');
         meetingForm.deviceId = this._getSetting("device").id;
-        leanbeanClient.postMeeting(JSON.stringify(meetingForm));
+        leanbeanClient.postMeeting(meetingForm, leanbean._loadMeeting.bind(this));
         // Change page to #meeting
         //$(":mobile-pagecontainer").pagecontainer("change", "#meeting");
     },
@@ -102,15 +292,16 @@ var leanbean = {
         }
         topicForm.deviceId = this._getSetting("device").id;
         topicForm.meetingId = this._getState().meetingId;
-        leanbeanClient.postTopic(JSON.stringify(topicForm));
-
-        // TODO: Clear input fields when added new topic
-        // TODO: Currently not working
+        leanbeanClient.postTopic(topicForm)
 
         $('#meeting-topic-add-title').val("");
         $('#meeting-topic-add-pitch').val("");
 
         $('#meeting-topic-add').panel('close');
+    },
+
+    _postTopicSuccessCallback: function() {
+        leanbeanClient.login(device.uuid, leanbean._handleLoginExistingDevice, leanbean._handleLoginNewDevice);
     },
 
     _meetingTopicDeleteConfirm: function(event) {
@@ -121,7 +312,7 @@ var leanbean = {
     _meetingFacilitateCheckboxChange: function(event) {
         var checkbox = $('#meeting-facilitate-checkbox').val();
         this._setState("isFacilitator", checkbox == 'on' ? true : false);
-        leanbeanClient.getMeeting(this._getState().meetingId);
+        leanbeanClient.getMeeting(this._getState().meetingId, leanbean._loadMeeting.bind(this));
         $('#meeting-topic-add').panel('close');
     },
 
@@ -178,19 +369,7 @@ var leanbean = {
         deviceTO.alias = alias;
         deviceTO.uuid = device.uuid;
         this._setSetting("device", deviceTO);
-        leanbeanClient.putDevice(deviceTO);
-    },
-
-    _handleLoginExistingDevice: function(deviceTO) {
-        console.log("_handleLoginExistingDevice: deviceTO.id = " + deviceTO.id);
-        $('#home-settings-alias').val(deviceTO.alias);
-        this._setSetting("device", deviceTO);
-    },
-
-    _handleLoginNewDevice: function(device) {
-        console.log("_handleLoginNewDevice: device.uuid = " + device.uuid);
-        $("#home-device-add").popup("open");
-        //leanbean._postDevice(JSON.stringify(device));
+        leanbeanClient.putDevice(deviceTO, leanbean.login);
     },
 
     // Layout functions
@@ -200,17 +379,17 @@ var leanbean = {
         this._setState("isFacilitator", false);
         this._addRecentMeetings(meetingId);
         console.log("meetingId = " + meetingId);
-        leanbeanClient.getMeeting(meetingId);
+        leanbeanClient.getMeeting(meetingId, leanbean._loadMeeting.bind(this));
     },
 
-    // Used when LeanBean is trigger via Custom URL Scheme
+    // Used when LeanBean is triggered via Custom URL Scheme
     getAndLoadMeeting: function(meetingId) {
         this._setState("meetingId", meetingId);
         this._getAndLoadMeeting();
     },
 
     _loadMeeting: function (meeting) {
-        console.log("leanbean._loadMeeting(): loading meeting with id " + meeting.id);
+        console.log("_loadMeeting(): loading meeting with id " + meeting.id);
         document.querySelector('#meeting-header-text').innerHTML = meeting.title;
         document.querySelector('#meeting-topic-set').innerHTML = '';
         for (var i = 0; i < meeting.topics.length; i++) {
@@ -237,7 +416,7 @@ var leanbean = {
 
         $('#meeting-topic-set').find('div[data-role=controlgroup]').controlgroup();
         $('#meeting-footer-text').html("Lean Coffee ID: " + meeting.id);
-        // Meeting page is loaded and ready to be viewed      this._getState().meetingId = meeting.id;
+        // Meeting page is loaded and ready to be viewed
         this._setState("meetingId", meeting.id);
         $(":mobile-pagecontainer").pagecontainer("change", "#meeting");
     },
@@ -333,6 +512,21 @@ var leanbean = {
 
     // Utility functions
 
+    login: function (device) {
+        leanbeanClient._getDevice(device.uuid, leanbean._handleLoginExistingDevice, leanbean._handleLoginNewDevice);
+    },
+
+    _handleLoginExistingDevice: function(device) {
+        console.log("_handleLoginExistingDevice: device.id = " + device.id);
+        $('#home-settings-alias').val(device.alias);
+        leanbean._setSetting("device", device);
+    },
+
+    _handleLoginNewDevice: function() {
+        console.log("_handleLoginNewDevice: device.uuid = " + device.uuid);
+        $("#home-device-add").popup("open");
+    },
+
     _formDataToJSON: function (formId) {
         var jsonObject = {};
         var formData = $(formId).serializeArray();
@@ -356,8 +550,6 @@ var leanbean = {
     },
 
     _setSetting: function(key, value) {
-        console.log("_setSetting(): value = ...");
-        console.log(value);
         var settings = this._getSettings();
         settings[key] = value;
         localStorage.setItem("settings", JSON.stringify(settings));
@@ -417,354 +609,3 @@ var leanbean = {
 };
 
 leanbean.init();
-
-var leanbeanClient = {
-
-    //_baseUrl: "http://10.0.2.2:8080/v1/",
-    _baseUrl: "http://api.leanbean.wisobi.com:8080/leanbean/v1/",
-
-    postDevice: function(device) {
-        var url = this._baseUrl + "device/";
-        $.ajax({
-                   headers: {
-                       'Accept': 'application/json; charset=utf-8',
-                       'Content-Type': 'application/json; charset=utf-8'
-                   },
-                   type: 'POST',
-                   url: url,
-                   datatype: 'json',
-                   data: JSON.stringify(device),
-                   success: function (deviceTO) {
-                       console.log("Successfully added device.");
-                       leanbeanClient.login(deviceTO);
-                   },
-                   error: function (jqXHR, textStatus, errorThrown) {
-                       if (jqXHR.status == 400) {
-                           alert('Error postDevice: HTTP status ' + jqXHR.status);
-                       } else {
-                           alert('Error postDevice: HTTP status ' + jqXHR.status);
-                       }
-                   }
-               })
-    },
-
-    putDevice: function(device) {
-        var url = this._baseUrl + "device/" + device.id;
-        $.ajax({
-                   headers: {
-                       'Accept': 'application/json; charset=utf-8',
-                       'Content-Type': 'application/json; charset=utf-8'
-                   },
-                   type: 'PUT',
-                   url: url,
-                   datatype: 'json',
-                   data: JSON.stringify(device),
-                   success: function (deviceTO) {
-                       console.log("Successfully updated device.");
-                       leanbeanClient.login(deviceTO);
-                   },
-                   error: function (jqXHR, textStatus, errorThrown) {
-                       if (jqXHR.status == 400) {
-                           alert('Error putDevice: HTTP status ' + jqXHR.status);
-                       } else {
-                           alert('Error putDevice: HTTP status ' + jqXHR.status);
-                       }
-                   }
-               })
-    },
-
-    getMeeting: function (meetingId) {
-        if (meetingId == '' || meetingId == null) {
-            return;
-        }
-        var url = this._baseUrl + "meeting/" + meetingId;
-        $.ajax({
-                   type: "GET",
-                   url: url,
-                   datatype: "json",
-                   success: function (meetingTO) {
-                       console.log("Successfully fetched meeting with id = " + meetingTO.id);
-                       leanbean._loadMeeting(meetingTO);
-                   },
-                   error: function (jqXHR, ajaxOptions, thrownError) {
-                       if (jqXHR.status == 404) {
-                           alert('404: Could not find a Lean Coffee with ID ' + meetingId);
-                       } else {
-                           alert('Error _getMeeting: HTTP status ' + jqXHR.status);
-                       }
-                       //console.log(testData);
-                       //leanbean._loadMeeting(testData);
-                   }
-               })
-    },
-
-    postMeeting: function (meeting) {
-        var url = this._baseUrl + "meeting/";
-        $.ajax({
-                   headers: {
-                       'Accept': 'application/json; charset=utf-8',
-                       'Content-Type': 'application/json; charset=utf-8'
-                   },
-                   type: 'POST',
-                   url: url,
-                   datatype: 'json',
-                   data: meeting,
-                   success: function (meetingTO) {
-                       console.log("Successfully added meeting.");
-                       leanbean._loadMeeting(meetingTO);
-                   },
-                   error: function (jqXHR, textStatus, errorThrown) {
-                       if (jqXHR.status == 400) {
-                           alert('Error _postMeeting: HTTP status ' + jqXHR.status);
-                       } else {
-                           alert('Error _postMeeting: HTTP status ' + jqXHR.status);
-                       }
-                   }
-               })
-    },
-
-    postTopic: function (topic) {
-        var url = this._baseUrl + "topic/";
-        $.ajax({
-                   headers: {
-                       'Accept': 'application/json; charset=utf-8',
-                       'Content-Type': 'application/json; charset=utf-8'
-                   },
-                   type: 'POST',
-                   url: url,
-                   datatype: 'json',
-                   data: topic,
-                   success: function () {
-                       console.log("Successfully added topic.")
-                       // leanbean._getAndLoadMeeting();
-                   }
-               })
-    },
-
-    putVote: function (vote) {
-        var url = this._baseUrl + "vote/" + vote.meetingId + "/" + vote.deviceId;
-        $.ajax({
-                   headers: {
-                       'Accept': 'application/json; charset=utf-8',
-                       'Content-Type': 'application/json; charset=utf-8'
-                   },
-                   type: 'PUT',
-                   url: url,
-                   datatype: 'json',
-                   data: JSON.stringify(vote),
-                   success: function () {
-                       console.log("Successfully added vote.")
-                   }
-               })
-    },
-
-    deleteTopic: function(topicId) {
-        if (topicId == '' || topicId == null) {
-            return;
-        }
-        var url = this._baseUrl + "topic/" + topicId;
-        $.ajax({
-                   type: "DELETE",
-                   url: url,
-                   datatype: "json",
-                   success: function () {
-                       console.log("Successfully deleted topic with id = " + topicId);
-                       leanbean._getAndLoadMeeting();
-                   },
-                   error: function (jqXHR, ajaxOptions, thrownError) {
-                       if (jqXHR.status == 404) {
-                           alert('Error deleteTopic: HTTP status ' + jqXHR.status);
-                       } else {
-                           alert('Error deleteTopic: HTTP status ' + jqXHR.status);
-                       }
-                   }
-               })
-    },
-
-    login: function () {
-        if (device == null) {
-            return;
-        }
-        console.log("login: device.uuid = " + device.uuid);
-        var url = this._baseUrl + "device-uuid/" + device.uuid;
-        $.ajax({
-                   type: "GET",
-                   url: url,
-                   datatype: "jsonp",
-                   success: function (deviceTO) {
-                       console.log("Successfully fetched device.");
-                       leanbean._handleLoginExistingDevice(deviceTO);
-                   },
-                   error: function (xhr, ajaxOptions, thrownError) {
-                       if (xhr.status == 404) {
-                           console.log('Error login: HTTP status ' + xhr.status);
-                           var deviceTO = {
-                               uuid: device.uuid
-                           }
-                           leanbean._handleLoginNewDevice(deviceTO);
-                       } else {
-                           alert('Error login: HTTP status ' + xhr.status);
-                       }
-
-                   }
-               })
-    }
-
-};
-
-var testData =
-{
-    "id": 1,
-    "title": "Weekly Manager Meeting",
-    "topics": [
-        {
-            "id": 2,
-            "device": {
-                "id": 2,
-                "alias": "Bob",
-                "model": null,
-                "cordova": null,
-                "platform": null,
-                "uuid": null,
-                "version": null
-            },
-            "title": "Risk of developer churn",
-            "pitch": "This is a short pitch of Risk of developer churn.",
-            "votes": [
-                {
-                    "id": 5,
-                    "device": {
-                        "id": 3,
-                        "alias": "Carol",
-                        "model": null,
-                        "cordova": null,
-                        "platform": null,
-                        "uuid": null,
-                        "version": null
-                    }
-                },
-                {
-                    "id": 2,
-                    "device": {
-                        "id": 1,
-                        "alias": "Alice",
-                        "model": null,
-                        "cordova": null,
-                        "platform": null,
-                        "uuid": null,
-                        "version": null
-                    }
-                },
-                {
-                    "id": 3,
-                    "device": {
-                        "id": 2,
-                        "alias": "Bob",
-                        "model": null,
-                        "cordova": null,
-                        "platform": null,
-                        "uuid": null,
-                        "version": null
-                    }
-                }
-            ]
-        },
-        {
-            "id": 1,
-            "device": {
-                "id": 1,
-                "alias": "Alice",
-                "model": null,
-                "cordova": null,
-                "platform": null,
-                "uuid": null,
-                "version": null
-            },
-            "title": "Salary process update",
-            "pitch": "This is a short pitch of Salary process update.",
-            "votes": [
-                {
-                    "id": 1,
-                    "device": {
-                        "id": 1,
-                        "alias": "Alice",
-                        "model": null,
-                        "cordova": null,
-                        "platform": null,
-                        "uuid": null,
-                        "version": null
-                    }
-                }
-            ]
-        },
-        {
-            "id": 3,
-            "device": {
-                "id": 2,
-                "alias": "Bob",
-                "model": null,
-                "cordova": null,
-                "platform": null,
-                "uuid": null,
-                "version": null
-            },
-            "title": "Autonomous teams",
-            "pitch": "This is a short pitch of Autonomous teams.",
-            "votes": [
-                {
-                    "id": 4,
-                    "device": {
-                        "id": 2,
-                        "alias": "Bob",
-                        "model": null,
-                        "cordova": null,
-                        "platform": null,
-                        "uuid": null,
-                        "version": null
-                    }
-                }
-            ]
-        },
-        {
-            "id": 5,
-            "device": {
-                "id": 3,
-                "alias": "Carol",
-                "model": null,
-                "cordova": null,
-                "platform": null,
-                "uuid": null,
-                "version": null
-            },
-            "title": "Upcoming conference",
-            "pitch": "This is a short pitch of Upcoming conference.",
-            "votes": []
-        },
-        {
-            "id": 4,
-            "device": {
-                "id": 2,
-                "alias": "Bob",
-                "model": null,
-                "cordova": null,
-                "platform": null,
-                "uuid": null,
-                "version": null
-            },
-            "title": "Is our code tested good enough?",
-            "pitch": "This is a short pitch of Is our code tested good enough?",
-            "votes": []
-        }
-    ],
-    "device": {
-        "id": 1,
-        "alias": "Alice",
-        "model": null,
-        "cordova": null,
-        "platform": null,
-        "uuid": null,
-        "version": null
-    },
-    "duration": 0,
-    "startDateTime": null
-};
