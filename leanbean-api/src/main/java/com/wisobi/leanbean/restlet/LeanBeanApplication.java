@@ -30,7 +30,7 @@ public class LeanBeanApplication extends Application {
     router.attach("/v1/device-uuid/{device-uuid}", DeviceUUIDResource.class);
     router.attach("/v1/topic/", TopicResource.class);
     router.attach("/v1/topic/{topic-id}", TopicResource.class);
-    router.attach("/v1/vote/", VoteResource.class);
+    router.attach("/v1/vote/{meeting-id}/{device-id}", VoteResource.class);
     router.attach("/v1/bootstrap", LeanBeanBootstrap.class);
     return router;
   }

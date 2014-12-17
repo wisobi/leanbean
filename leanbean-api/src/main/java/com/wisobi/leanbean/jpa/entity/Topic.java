@@ -28,7 +28,6 @@ public class Topic implements Serializable {
   private Device device;
   private String title;
   private String pitch;
-  private Set<Vote> votes;
   private Meeting meeting;
 
   public Topic() {
@@ -77,28 +76,6 @@ public class Topic implements Serializable {
     this.pitch = pitch;
   }
 
-  @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
-  @JsonManagedReference
-  public Set<Vote> getVotes() {
-    return votes;
-  }
-
-  public void setVotes(Set<Vote> votes) {
-    this.votes = votes;
-  }
-
-  public void addVote(Vote vote) {
-    if (this.votes == null) {
-      this.votes = new HashSet<Vote>();
-    }
-    this.votes.add(vote);
-    vote.setTopic(this);
-  }
-
-  public int numVotes() {
-    return this.votes == null ? 0 : this.votes.size();
-  }
-
   @ManyToOne
   @JoinColumn(name = "meeting_id")
   @JsonBackReference
@@ -109,20 +86,5 @@ public class Topic implements Serializable {
   public void setMeeting(Meeting meeting) {
     this.meeting = meeting;
   }
-
-  public static Comparator<Topic> TopicVoteComparator = new Comparator<Topic>() {
-
-    public int compare(Topic t1, Topic t2) {
-      if (t1.getId() == t2.getId()) {
-        return 0;
-      }
-      if (t1.numVotes() > t2.numVotes()) {
-        return -1;
-      } else  {
-        return 1;
-      }
-    }
-
-  };
 
 }

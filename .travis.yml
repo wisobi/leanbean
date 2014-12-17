@@ -1,0 +1,9 @@
+language: java
+
+jdk:
+  - oraclejdk7
+
+script:
+  - cd leanbean-api
+  - mvn install -DskipTests=true
+  - mvn test

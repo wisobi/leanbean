@@ -6,6 +6,9 @@ import com.wisobi.leanbean.jpa.entity.Topic;
 import com.wisobi.leanbean.jpa.entity.Device;
 import com.wisobi.leanbean.jpa.entity.Vote;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Properties;
 
@@ -15,6 +18,8 @@ import javax.persistence.EntityManager;
  * Created by bjork on 10/09/14.
  */
 public class LeanBeanJpaDao implements LeanBeanDao {
+
+  final static Logger logger = LoggerFactory.getLogger(LeanBeanJpaDao.class);
 
   private EntityManager em;
 
@@ -49,8 +54,8 @@ public class LeanBeanJpaDao implements LeanBeanDao {
         .setParameter("uuid", deviceUUID)
         .getResultList();
     Device device = null;
-    if(!resultList.isEmpty()) {
-      device = (Device)resultList.get(0);
+    if (!resultList.isEmpty()) {
+      device = (Device) resultList.get(0);
     }
     return device;
   }
@@ -145,6 +150,7 @@ public class LeanBeanJpaDao implements LeanBeanDao {
           "Missing data. Tried to add a vote without a referenced device.");
     }
     Device device = findByDeviceId(vote.getDevice().getId());
+
     if (device == null) {
       throw new IllegalArgumentException(
           "Inconsistent data. Tried to add a vote with a reference to device id " + vote
@@ -152,25 +158,67 @@ public class LeanBeanJpaDao implements LeanBeanDao {
     }
 
     // Verify that vote has referenced topic that exists
-    if (vote.getTopic() == null) {
+    if (vote.getMeeting() == null) {
       throw new IllegalArgumentException(
-          "Missing data. Tried to add a vote without a referenced topic.");
+          "Missing data. Tried to add a vote without a referenced meeting.");
     }
-    Topic topic = findByTopicId(vote.getTopic().getId());
-    if (topic == null) {
+    Meeting meeting = findByMeetingId(vote.getMeeting().getId());
+
+    if (meeting == null) {
       throw new IllegalArgumentException(
-          "Inconsistent data. Tried to add a vote with a reference to topic id " + vote
-              .getTopic().getId() + " which cannot be found in data base.");
+          "Inconsistent data. Tried to add a vote with a reference to meeting id " + vote
+              .getMeeting().getId() + " which cannot be found in data base.");
+    }
+
+    //Vote mergeVote = new Vote();
+    //mergeVote.setDevice(device);
+    //mergeVote.setMeeting(meeting);
+    //mergeVote.setTopicIds(vote.getTopicIds());
+    // Merge and persist
+    em.getTransaction().begin();
+    //em.merge(device);
+    //em.merge(meeting);
+    //em.persist(vote);
+    em.merge(vote);
+    // Set the bidirectional relationships once the vote is persisted
+    //meeting.addVote(vote);
+    em.getTransaction().commit();
+  }
+
+  @Override
+  public Vote updateVote(Vote vote) throws IllegalArgumentException {
+
+    // Verify that vote has referenced device that exists
+    if (vote.getDevice() == null) {
+      throw new IllegalArgumentException(
+          "Missing data. Tried to add a vote without a referenced device.");
+    }
+    Device device = findByDeviceId(vote.getDevice().getId());
+
+    if (device == null) {
+      throw new IllegalArgumentException(
+          "Inconsistent data. Tried to add a vote with a reference to device id " + vote
+              .getDevice().getId() + " which cannot be found in data base.");
+    }
+
+    // Verify that vote has referenced topic that exists
+    if (vote.getMeeting() == null) {
+      throw new IllegalArgumentException(
+          "Missing data. Tried to add a vote without a referenced meeting.");
+    }
+    Meeting meeting = findByMeetingId(vote.getMeeting().getId());
+
+    if (meeting == null) {
+      throw new IllegalArgumentException(
+          "Inconsistent data. Tried to add a vote with a reference to meeting id " + vote
+              .getMeeting().getId() + " which cannot be found in data base.");
     }
 
     // Merge and persist
     em.getTransaction().begin();
-    em.merge(device);
-    em.merge(topic);
-    em.persist(vote);
-    // Set the bidirectional relationships once the vote is persisted
-    topic.addVote(vote);
+    Vote returnVote = em.merge(vote);
     em.getTransaction().commit();
+    return returnVote;
   }
 
   @Override

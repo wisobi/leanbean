@@ -1,10 +1,12 @@
 package com.wisobi.leanbean.dto;
 
+import com.wisobi.leanbean.LeanBeanUtil;
 import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.entity.Topic;
 import com.wisobi.leanbean.jpa.entity.Device;
 import com.wisobi.leanbean.jpa.entity.Vote;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,36 +46,28 @@ public class DTO2DAOMapper {
     return topic;
   }
 
-  public static Set<Vote> mapVotes(VoteTO voteTO) {
-    Set<Vote> votes = new HashSet<Vote>();
+  public static Vote mapVote(VoteTO voteTO) {
+    Vote vote = new Vote();
 
-    for(long topicId : voteTO.getTopicIds()) {
-      Vote vote = new Vote();
-      vote.setId(voteTO.getId());
+    Device device = new Device();
+    device.setId(voteTO.getDeviceId());
+    vote.setDevice(device);
 
-      Device device = new Device();
-      device.setId(voteTO.getDeviceId());
-      vote.setDevice(device);
+    Meeting meeting = new Meeting();
+    meeting.setId(voteTO.getMeetingId());
+    vote.setMeeting(meeting);
 
-      Topic topic = new Topic();
-      topic.setId(topicId);
-      vote.setTopic(topic);
+    String topicIds = LeanBeanUtil.arrayToString(voteTO.getTopicIds());
+    vote.setTopicIds(topicIds);
 
-      votes.add(vote);
-    }
-
-    return votes;
+    return vote;
   }
 
   public static Device mapDevice(DeviceTO deviceTO) {
     Device device = new Device();
     device.setId(deviceTO.getId());
-    device.setCordova(deviceTO.getCordova());
-    device.setModel(deviceTO.getModel());
-    device.setPlatform(deviceTO.getPlatform());
     device.setAlias(deviceTO.getAlias());
     device.setUuid(deviceTO.getUuid());
-    device.setVersion(deviceTO.getVersion());
     return device;
   }
 

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -16,33 +18,26 @@ import javax.persistence.Table;
  * Created by bjork on 29/08/14.
  */
 @Entity
+@IdClass(VoteId.class)
 @Table(name = "vote")
 public class Vote implements Serializable {
 
-  private long id;
-
   private Device device;
 
-  private Topic topic;
+  private Meeting meeting;
+
+  private String topicIds;
 
   public Vote() {
   }
 
-  public Vote(Device device, Topic topic) {
+  public Vote(Device device, Meeting meeting, String topicIds) {
     this.device = device;
-    this.topic = topic;
+    this.meeting = meeting;
+    this.topicIds = topicIds;
   }
 
   @Id
-  @GeneratedValue
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
-
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "device_id")
   public Device getDevice() {
@@ -53,14 +48,23 @@ public class Vote implements Serializable {
     this.device = device;
   }
 
-  @ManyToOne
-  @JoinColumn(name = "topic_id")
+  @Id
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "meeting_id")
   @JsonBackReference
-  public Topic getTopic() {
-    return topic;
+  public Meeting getMeeting() {
+    return meeting;
   }
 
-  public void setTopic(Topic topic) {
-    this.topic = topic;
+  public void setMeeting(Meeting meeting) {
+    this.meeting = meeting;
+  }
+
+  public String getTopicIds() {
+    return topicIds;
+  }
+
+  public void setTopicIds(String topicIds) {
+    this.topicIds = topicIds;
   }
 }

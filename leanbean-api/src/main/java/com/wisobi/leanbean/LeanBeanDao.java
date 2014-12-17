@@ -21,6 +21,7 @@ public interface LeanBeanDao {
   public void addVote(Vote vote) throws IllegalArgumentException;
   public void deleteTopic(Topic topic) throws IllegalArgumentException;
   public Device updateDevice(Device device) throws IllegalArgumentException;
+  public Vote updateVote(Vote vote) throws IllegalArgumentException;
   public void close() throws Exception;
 
 }

@@ -38,19 +38,20 @@ public class MeetingEndpoint {
     MeetingResource meetingResource = new MeetingResource();
     MeetingViewTO meeting = meetingResource.findMeetingById(meetingId);
     if (meeting == null) {
-      broadcast("{}");
+      broadcast("meetingId", meetingId, "{}");
     }
     try {
       String meetingJSON = new ObjectMapper().writer().writeValueAsString(meeting);
-      broadcast(meetingJSON);
+      broadcast("meetingId", meetingId, meetingJSON);
     } catch (JsonProcessingException e) {
       logger.debug(e.getMessage());
     }
   }
 
-  private static void broadcast(String msg) {
+  private static void broadcast(String key, Long value, String msg) {
     for (Session s : session.getOpenSessions()) {
-      if (s.isOpen()) {
+      long propValue = Long.parseLong((String)s.getUserProperties().get(key));
+      if (s.isOpen() && value == propValue) {
         try {
           s.getBasicRemote().sendText(msg);
         } catch (IOException e) {
@@ -67,6 +68,7 @@ public class MeetingEndpoint {
 
   @OnOpen
   public void start(@PathParam("meeting-id") String meetingId, Session session) {
+    session.getUserProperties().put("meetingId", meetingId);
     this.session = session;
     logger.debug("LeanBean OnOpen meetingId " + meetingId);
   }
@@ -91,6 +93,6 @@ public class MeetingEndpoint {
       e.printStackTrace();
     }
     logger.debug(message);
-    broadcast(message);
+    //broadcast(message);
   }
 }

@@ -27,6 +27,7 @@ public class Meeting implements Serializable {
   private long id;
   private String title;
   private Set<Topic> topics = new HashSet<Topic>();
+  private Set<Vote> votes = new HashSet<Vote>();
   private Device device;
   private int duration;
   private Date startDateTime;
@@ -68,9 +69,10 @@ public class Meeting implements Serializable {
   @OneToMany(mappedBy = "meeting", fetch = FetchType.EAGER)
   @JsonManagedReference
   public Set<Topic> getTopics() {
-    Set<Topic> sortedTopics = new TreeSet<Topic>(Topic.TopicVoteComparator);
-    sortedTopics.addAll(this.topics);
-    return sortedTopics;
+    //Set<Topic> sortedTopics = new TreeSet<Topic>(Topic.TopicVoteComparator);
+    //sortedTopics.addAll(this.topics);
+    //return sortedTopics;
+    return this.topics;
   }
 
   public void setTopics(Set<Topic> topics) {
@@ -80,6 +82,20 @@ public class Meeting implements Serializable {
   public void addTopic(Topic topic) {
     this.topics.add(topic);
     topic.setMeeting(this);
+  }
+
+  @OneToMany(mappedBy = "meeting", fetch = FetchType.EAGER)
+  public Set<Vote> getVotes() {
+    return votes;
+  }
+
+  public void setVotes(Set<Vote> votes) {
+    this.votes = votes;
+  }
+
+  public void addVote(Vote vote) {
+    this.votes.add(vote);
+    vote.setMeeting(this);
   }
 
   @ManyToOne(fetch = FetchType.EAGER)

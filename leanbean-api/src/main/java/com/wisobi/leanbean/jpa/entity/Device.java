@@ -17,11 +17,7 @@ public class Device implements Serializable {
 
   private long id;
   private String alias;
-  private String model;
-  private String cordova;
-  private String platform;
   private String uuid;
-  private String version;
 
   @Id
   @GeneratedValue
@@ -41,26 +37,6 @@ public class Device implements Serializable {
     this.alias = alias;
   }
 
-  public String getModel() {
-    return model;
-  }
-
-  public void setModel(String model) {
-    this.model = model;
-  }
-
-  public String getCordova() { return cordova; }
-
-  public void setCordova(String cordova) { this.cordova = cordova; }
-
-  public String getPlatform() {
-    return platform;
-  }
-
-  public void setPlatform(String platform) {
-    this.platform = platform;
-  }
-
   @Column(unique = true)
   public String getUuid() {
     return uuid;
@@ -70,7 +46,4 @@ public class Device implements Serializable {
     this.uuid = uuid;
   }
 
-  public String getVersion() { return version; }
-
-  public void setVersion(String version) { this.version = version; }
 }

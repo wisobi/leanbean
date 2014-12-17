@@ -36,38 +36,22 @@ public class LeanBeanDaoTest {
 
     Device device1 = new Device();
     device1.setAlias("Alice");
-    device1.setModel("Android SDK built for x86");
-    device1.setCordova("3.6.4");
-    device1.setPlatform("Android");
     device1.setUuid("1ab9f8483ab42ef1");
-    device1.setVersion("4.4.2");
     dao.addDevice(device1);
 
     Device device2 = new Device();
     device2.setAlias("Bob");
-    device2.setModel("Android SDK built for x86");
-    device2.setCordova("3.6.4");
-    device2.setPlatform("Android");
     device2.setUuid("1ab9f8483ab42ef2");
-    device2.setVersion("4.4.2");
     dao.addDevice(device2);
 
     Device device3 = new Device();
     device3.setAlias("Carol");
-    device3.setModel("Android SDK built for x86");
-    device3.setCordova("3.6.4");
-    device3.setPlatform("Android");
     device3.setUuid("1ab9f8483ab42ef3");
-    device3.setVersion("4.4.2");
     dao.addDevice(device3);
 
     Device device4 = new Device();
     device4.setAlias("Dave");
-    device4.setModel("Android SDK built for x86");
-    device4.setCordova("3.6.4");
-    device4.setPlatform("Android");
     device4.setUuid("1ab9f8483ab42ef4");
-    device4.setVersion("4.4.2");
     dao.addDevice(device4);
 
     Meeting meeting1 = new Meeting("Weekly Manager Meeting", device1);
@@ -116,14 +100,11 @@ public class LeanBeanDaoTest {
     dao.addTopic(topic6);
 
     // Votes for meeting 1
-    Vote vote1 = new Vote(device1, topic1);
+    logger.debug("Help: meeting1.getId() = " + meeting1.getId());
+    Vote vote1 = new Vote(device1, meeting1, "1,2");
     dao.addVote(vote1);
-    Vote vote2 = new Vote(device1, topic2);
+    Vote vote2 = new Vote(device2, meeting1, "2,3");
     dao.addVote(vote2);
-    Vote vote3 = new Vote(device2, topic2);
-    dao.addVote(vote3);
-    Vote vote4 = new Vote(device2, topic3);
-    dao.addVote(vote4);
 
   }
 
@@ -139,6 +120,7 @@ public class LeanBeanDaoTest {
     assertEquals(5, numTopics);
   }
 
+  /*
   @Test
   public void testSortedTopics() {
     Meeting meeting = dao.findByMeetingId(1);
@@ -161,6 +143,7 @@ public class LeanBeanDaoTest {
     logger.debug("Topic Id: " + topic.getId() + ", votes: " + topic.getVotes());
     assertNull(topic.getVotes());
   }
+  */
 
   @Test
   public void testMeetingDevice() {
@@ -187,25 +170,24 @@ public class LeanBeanDaoTest {
     assertTrue(tested);
   }
 
+  /*
   @Test
   public void testVoteDevice() {
     Meeting meeting = dao.findByMeetingId(1);
     boolean tested = false;
-    for (Topic topic : meeting.getTopics()) {
-      if (topic.getId() == 1) {
-        for (Vote vote : topic.getVotes()) {
-          if (vote.getId() == 1) {
-            Device device = vote.getDevice();
-            logger.debug("Vote Id: " + vote.getId() + ", username: " + device.getAlias());
-            assertNotNull(device);
-            assertEquals("Alice", device.getAlias());
-            tested = true;
-          }
-        }
+
+    // Loop through all the meeting votes
+    for(Vote vote : meeting.getVotes()){
+      if (meeting.getId() == 1) {
+        Device device = vote.getDevice();
+        assertNotNull(device);
+        assertEquals("Alice", device.getAlias());
+        tested = true;
       }
     }
     assertTrue(tested);
   }
+  */
 
   /*
    * Test persistence and data consistency of Meeting
@@ -243,11 +225,7 @@ public class LeanBeanDaoTest {
   public void testAddDevice() {
     Device device = new Device();
     device.setAlias("Eve");
-    device.setModel("Android SDK built for x86");
-    device.setCordova("3.6.4");
-    device.setPlatform("Android");
     device.setUuid("1ab9f8483ab42ef5");
-    device.setVersion("4.4.2");
     dao.addDevice(device);
   }
 
@@ -322,55 +300,55 @@ public class LeanBeanDaoTest {
    */
   @Test(expected = IllegalArgumentException.class)
   public void testAddVoteWithNullDevice() {
-    Topic topic = new Topic();
-    topic.setId(1);
+    Meeting meeting = new Meeting();
+    meeting.setId(1);
 
-    Vote vote = new Vote(null, topic);
+    Vote vote = new Vote(null, meeting, "1, 2");
     dao.addVote(vote);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testAddVoteWithInconsistentDevice() {
-    Topic topic = new Topic();
-    topic.setId(1);
+    Meeting meeting = new Meeting();
+    meeting.setId(1);
 
     Device device = new Device();
     device.setId(1000);
 
-    Vote vote = new Vote(device, topic);
+    Vote vote = new Vote(device, meeting, "1,2");
     dao.addVote(vote);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testAddVoteWithNullTopic() {
+  public void testAddVoteWithNullMeeting() {
     Device device = new Device();
     device.setId(1);
 
-    Vote vote = new Vote(device, null);
+    Vote vote = new Vote(device, null, "1,2");
     dao.addVote(vote);
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testAddVoteWithInconsistentTopic() {
+  public void testAddVoteWithInconsistentMeeting() {
+    Meeting meeting = new Meeting();
+    meeting.setId(1000);
+
     Device device = new Device();
     device.setId(1);
 
-    Topic topic = new Topic();
-    topic.setId(1000);
-
-    Vote vote = new Vote(device, topic);
+    Vote vote = new Vote(device, meeting, "1,2");
     dao.addVote(vote);
   }
 
   @Test
   public void addVote() {
+    Meeting meeting = new Meeting();
+    meeting.setId(2);
+
     Device device = new Device();
     device.setId(1);
 
-    Topic topic = new Topic();
-    topic.setId(6);
-
-    Vote vote = new Vote(device, topic);
+    Vote vote = new Vote(device, meeting, "6");
     dao.addVote(vote);
   }
 

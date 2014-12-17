@@ -2,8 +2,8 @@ package com.wisobi.leanbean.dto;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Created by bjork on 05/11/14.
@@ -13,7 +13,7 @@ public class MeetingViewTO implements Serializable {
   private String type = "meetingview";
   private long id;
   private String title;
-  private Set<TopicViewTO> topics = new HashSet<TopicViewTO>();
+  private SortedSet<TopicViewTO> topics;
   private DeviceTO device;
   private int duration;
   private Date startDateTime;
@@ -38,11 +38,11 @@ public class MeetingViewTO implements Serializable {
     this.title = title;
   }
 
-  public Set<TopicViewTO> getTopics() {
+  public SortedSet<TopicViewTO> getTopics() {
     return topics;
   }
 
-  public void setTopics(Set<TopicViewTO> topics) {
+  public void setTopics(SortedSet<TopicViewTO> topics) {
     this.topics = topics;
   }
 

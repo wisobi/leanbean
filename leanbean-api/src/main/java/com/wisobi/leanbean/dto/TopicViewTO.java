@@ -17,10 +17,16 @@ public class TopicViewTO implements Serializable {
       if (t1.getId() == t2.getId()) {
         return 0;
       }
-      if (t1.numVotes() > t2.numVotes()) {
+      if (t1.numVotes() < t2.numVotes()) {
+        return 1;
+      } else if (t1.numVotes() > t2.numVotes()) {
         return -1;
       } else {
-        return 1;
+        if(t1.getId() > t2.getId()) {
+          return 1;
+        } else {
+          return -1;
+        }
       }
     }
 

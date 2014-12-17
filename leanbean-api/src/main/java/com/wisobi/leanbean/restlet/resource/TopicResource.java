@@ -34,7 +34,7 @@ public class TopicResource extends ServerResource {
       dao.addTopic(topic);
       getResponse().setStatus(Status.SUCCESS_CREATED);
     } catch (Exception e) {
-      logger.debug(e.getMessage());
+      logger.error(e.getMessage());
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage(), e);
     } finally {
       try {
@@ -56,7 +56,7 @@ public class TopicResource extends ServerResource {
       topic = dao.findByTopicId(topicId);
       dao.deleteTopic(topic);
     } catch (Exception e) {
-      logger.debug(e.getMessage());
+      logger.error(e.getMessage());
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage(), e);
     } finally {
       try {

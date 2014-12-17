@@ -27,38 +27,22 @@ public class LeanBeanBootstrap extends ServerResource {
     try {
       Device device1 = new Device();
       device1.setAlias("Alice");
-      device1.setModel("Android SDK built for x86");
-      device1.setCordova("3.6.4");
-      device1.setPlatform("Android");
       device1.setUuid("1ab9f8483ab42ef9");
-      device1.setVersion("4.4.2");
       dao.addDevice(device1);
 
       Device device2 = new Device();
       device2.setAlias("Bob");
-      device2.setModel("Android SDK built for x86");
-      device2.setCordova("3.6.4");
-      device2.setPlatform("Android");
       device2.setUuid("1ab9f8483ab42ef7");
-      device2.setVersion("4.4.2");
       dao.addDevice(device2);
 
       Device device3 = new Device();
       device3.setAlias("Carol");
-      device3.setModel("Android SDK built for x86");
-      device3.setCordova("3.6.4");
-      device3.setPlatform("Android");
       device3.setUuid("1ab9f8483ab42ef6");
-      device3.setVersion("4.4.2");
       dao.addDevice(device3);
 
       Device device4 = new Device();
       device4.setAlias("Dave");
-      device4.setModel("Android SDK built for x86");
-      device4.setCordova("3.6.4");
-      device4.setPlatform("Android");
       device4.setUuid("1ab9f8483ab42ef5");
-      device4.setVersion("4.4.2");
       dao.addDevice(device4);
 
       Meeting meeting1 = new Meeting("Weekly Manager Meeting", device1);
@@ -106,16 +90,12 @@ public class LeanBeanBootstrap extends ServerResource {
       dao.addTopic(topic6);
 
       // Votes for meeting 1
-      Vote vote1 = new Vote(device1, topic1);
+      Vote vote1 = new Vote(device1, meeting1, "1,2");
       dao.addVote(vote1);
-      Vote vote2 = new Vote(device1, topic2);
+      Vote vote2 = new Vote(device2, meeting1, "2,3");
       dao.addVote(vote2);
-      Vote vote3 = new Vote(device2, topic2);
+      Vote vote3 = new Vote(device3, meeting1, "2");
       dao.addVote(vote3);
-      Vote vote4 = new Vote(device2, topic3);
-      dao.addVote(vote4);
-      Vote vote5 = new Vote(device3, topic2);
-      dao.addVote(vote5);
 
       dao.close();
     } catch(Exception e) {

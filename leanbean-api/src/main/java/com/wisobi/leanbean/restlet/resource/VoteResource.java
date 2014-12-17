@@ -3,17 +3,16 @@ package com.wisobi.leanbean.restlet.resource;
 import com.wisobi.leanbean.LeanBeanDao;
 import com.wisobi.leanbean.dto.DTO2DAOMapper;
 import com.wisobi.leanbean.dto.VoteTO;
+import com.wisobi.leanbean.endpoint.MeetingEndpoint;
 import com.wisobi.leanbean.jpa.LeanBeanJpaDao;
 import com.wisobi.leanbean.jpa.entity.Vote;
 
 import org.restlet.data.Status;
-import org.restlet.resource.Post;
+import org.restlet.resource.Put;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Set;
 
 /**
  * Created by bjork on 04/11/14.
@@ -24,13 +23,14 @@ public class VoteResource extends ServerResource {
 
   private LeanBeanDao dao = new LeanBeanJpaDao();
 
-  @Post("json")
+  @Put("json")
   public void addVotes(VoteTO voteTO) {
-    Set<Vote> votes = DTO2DAOMapper.mapVotes(voteTO);
+    long meetingId = Long.parseLong(getRequestAttributes().get("meeting-id").toString());
+    long deviceId = Long.parseLong(getRequestAttributes().get("device-id").toString());
+
+    Vote vote = DTO2DAOMapper.mapVote(voteTO);
     try {
-      for(Vote vote : votes) {
-        dao.addVote(vote);
-      }
+      dao.updateVote(vote);
       getResponse().setStatus(Status.SUCCESS_CREATED);
     } catch (Exception e) {
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage(), e);
@@ -41,6 +41,8 @@ public class VoteResource extends ServerResource {
         logger.error(e.getMessage());
       }
     }
+
+    MeetingEndpoint.broadcastMeeting(meetingId);
   }
 
 }
