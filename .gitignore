@@ -29,7 +29,7 @@ hs_err_pid*
 # leanbean-api - credential resources
 leanbean-api/src/main/resources/META-INF/context.xml
 leanbean-api/src/main/resources/leanbean.properties
-leanbean-api/src/test/resources/META-INF/persistence.xml
+# leanbean-api/src/test/resources/META-INF/persistence.xml
 
 # leanbean-web
 
