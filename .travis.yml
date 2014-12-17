@@ -3,6 +3,9 @@ language: java
 jdk:
   - oraclejdk7
 
+before_script:
+  - mysql -e 'create database leanbean_test;'
+
 script:
   - cd leanbean-api
   - mvn install -DskipTests=true
