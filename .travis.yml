@@ -2,6 +2,7 @@ language: objective-c
 xcode_project: leanbean-mobile/platforms/ios/LeanBean.xcodeproj
 xcode_scheme: leanbean-mobile/platforms/ios/LeanBean
 sudo: false
+services: mysql
 
 before_install:
   # Setup JVM and tools
