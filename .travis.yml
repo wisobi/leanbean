@@ -5,11 +5,12 @@ sudo: false
 
 before_install:
   - java -version
+  # Install JVM and tools
+  - brew install ant
+  - brew install maven
+  - java -version
   - ant -version
   - mvn -version
-  # Install JVM and tools
-  #- brew install ant
-  #- brew install maven
   # - sudo apt-get install oracle-java7-installer
   # Install Android SDK
   - wget http://dl.google.com/android/android-sdk_r24.0.1-linux.tgz
