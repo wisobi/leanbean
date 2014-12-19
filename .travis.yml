@@ -5,12 +5,9 @@ sudo: false
 
 before_install:
   # Setup JVM and tools
-  - export "JAVA_HOME=`/usr/libexec/java_home`"
+  - export JAVA_HOME=/usr/libexec/java_home
   - brew install ant
   - brew install maven
-  - java -version
-  - ant -version
-  - mvn -version
   # Install Android SDK
   - wget http://dl.google.com/android/android-sdk_r24.0.1-linux.tgz
   - tar xzf android-sdk_r24.0.1-linux.tgz
@@ -22,6 +19,7 @@ before_install:
   # Install platforms and plugins for leanbean-mobile
   - cd leanbean-mobile
   - cordova platform add android
+  - cordova platform add ios
   - cordova plugin add org.apache.cordova.device
   - cordova plugin add org.apache.cordova.statusbar
   - cordova plugin add https://github.com/EddyVerbruggen/LaunchMyApp-PhoneGap-Plugin.git --variable URL_SCHEME=leanbean
@@ -29,7 +27,7 @@ before_install:
   - cd ..
 
 before_script:
-  #- mysql -e 'create database leanbean_test;'
+  - mysql -e 'create database leanbean_test;'
 
 script:
   # Build backend
@@ -38,7 +36,8 @@ script:
   #- mvn install -DskipTests=true
   #- mvn test
   #- cd ..
-  # Build Android
+  # Build Android and IOS
   - pwd
   - cd leanbean-mobile
   - cordova build android
+  - cordova build ios
