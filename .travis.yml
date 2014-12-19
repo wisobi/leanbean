@@ -2,7 +2,6 @@ language: objective-c
 xcode_project: leanbean-mobile/platforms/ios/LeanBean.xcodeproj
 xcode_scheme: leanbean-mobile/platforms/ios/LeanBean
 sudo: false
-services: mysql
 
 before_install:
   # Setup JVM and tools
@@ -28,15 +27,14 @@ before_install:
   - cd ..
 
 before_script:
-  - mysql -e 'create database leanbean_test;'
 
 script:
   # Build backend
   - pwd
-  #- cd leanbean-api
-  #- mvn install -DskipTests=true
-  #- mvn test
-  #- cd ..
+  - cd leanbean-api
+  - mvn install -DskipTests=true
+  - mvn test
+  - cd ..
   # Build Android and IOS
   - pwd
   - cd leanbean-mobile
