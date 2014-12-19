@@ -1,9 +1,16 @@
-language: java
+language: objective-c
+xcode_project: leanbean-mobile/platforms/ios/LeanBean.xcodeproj
+xcode_scheme: leanbean-mobile/platforms/ios/LeanBean
 
 jdk:
   - oraclejdk7
 
 before_install:
+  - sudo apt-get update -qq
+  # Install JVM and tools
+  - sudo apt-get install ant
+  - sudo apt-get install maven
+  # - sudo apt-get install oracle-java7-installer
   # Install Android SDK
   - wget http://dl.google.com/android/android-sdk_r24.0.1-linux.tgz
   - tar xzf android-sdk_r24.0.1-linux.tgz
