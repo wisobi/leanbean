@@ -6,13 +6,25 @@ jdk:
   - oraclejdk7
 
 before_install:
+  # Install Android SDK
+  - wget http://dl.google.com/android/android-sdk_r24.0.1-linux.tgz
+  - tar xzf android-sdk_r24.0.1-linux.tgz
+  - export ANDROID_HOME=$PWD/android-sdk-linux
+  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+  - android update sdk --filter platform-tools,android-21,extra-android-support --no-ui --force
+  # Install Cordova
+  - apt-get install npm
+  - npm install node
   - npm install -g cordova
+  # Install platforms and plugins for leanbean-mobile
   - cd leanbean-mobile
   - cordova platform add android
   - cordova platform add ios
   - cordova plugin add org.apache.cordova.device
   - cordova plugin add org.apache.cordova.statusbar
   - cordova plugin add https://github.com/EddyVerbruggen/LaunchMyApp-PhoneGap-Plugin.git --variable URL_SCHEME=leanbean
+  # Go back to root directory
+  - cd ..
 
 before_script:
   - mysql -e 'create database leanbean_test;'
@@ -21,4 +33,4 @@ script:
   - cd leanbean-api
   - mvn install -DskipTests=true
   - mvn test
-  - cordova build
+  - cordova build android
