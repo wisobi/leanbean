@@ -1,7 +1,5 @@
 language: java
 
-sudo: false
-
 jdk:
   - oraclejdk7
 
@@ -13,9 +11,9 @@ before_install:
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   - ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --filter platform-tools,android-21,extra-android-support --no-ui --force
   # Install Cordova
-  - apt-get install npm
-  - npm install node
-  - npm install -g cordova
+  - sudo apt-get install npm
+  - sudo npm install node
+  - sudo npm install -g cordova
   # Install platforms and plugins for leanbean-mobile
   - cd leanbean-mobile
   - cordova platform add android
