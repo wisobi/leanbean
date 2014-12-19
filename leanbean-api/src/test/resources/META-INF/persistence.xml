@@ -9,12 +9,12 @@
         <class>com.wisobi.leanbean.jpa.entity.Device</class>
         <class>com.wisobi.leanbean.jpa.entity.Vote</class>
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />
             <property name="hibernate.hbm2ddl.auto" value="create-drop" />
-            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/>
             <property name="hibernate.connection.password" value=""/>
-            <property name="hibernate.connection.url" value="jdbc:mysql://127.0.0.1:3306/leanbean_test"/>
-            <property name="hibernate.connection.username" value="root"/>
+            <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:leanbean_test"/>
+            <property name="hibernate.connection.username" value="sa"/>
             <property name="hibernate.show_sql" value="true"/>
             <!-- Properties that are duplicated in both main and test -->
             <property name="hibernate.max_fetch_depth" value="5"/>

@@ -18,6 +18,7 @@
         <logback.version>1.0.1</logback.version>
         <mysql.version>5.1.6</mysql.version>
         <websocket.version>1.0</websocket.version>
+        <hsqldb.version>2.3.0</hsqldb.version>
     </properties>
 
     <repositories>
@@ -25,6 +26,11 @@
             <id>maven-restlet</id>
             <name>Public online Restlet repository</name>
             <url>http://maven.restlet.org</url>
+        </repository>
+        <repository>
+            <id>hsqldb</id>
+            <name>HyperSQL</name>
+            <url>http://hsqldb.org/repos</url>
         </repository>
     </repositories>
 
@@ -84,6 +90,12 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
             <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>${hsqldb.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
