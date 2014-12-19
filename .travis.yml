@@ -27,7 +27,13 @@ before_script:
   - mysql -e 'create database leanbean_test;'
 
 script:
+  # Build backend
+  - pwd
   - cd leanbean-api
   - mvn install -DskipTests=true
   - mvn test
+  - cd ..
+  # Build Android
+  - pwd
+  - cd leanbean-mobile
   - cordova build android
