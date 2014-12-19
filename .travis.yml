@@ -6,10 +6,10 @@ jdk:
   - oraclejdk7
 
 before_install:
-  - sudo apt-get update -qq
+  - brew update
   # Install JVM and tools
-  - sudo apt-get install ant
-  - sudo apt-get install maven
+  #- brew install ant
+  #- brew install maven
   # - sudo apt-get install oracle-java7-installer
   # Install Android SDK
   - wget http://dl.google.com/android/android-sdk_r24.0.1-linux.tgz
@@ -21,8 +21,8 @@ before_install:
   # Android SDK requires some x86 architecture libraries even on x64 system
   - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq -y libc6:i386 libgcc1:i386 libstdc++6:i386 libz1:i386; fi
   # Install Cordova
-  - sudo apt-get install npm
-  - npm install node
+  #- brew install npm
+  - brew install node
   - npm install -g cordova
   # Install platforms and plugins for leanbean-mobile
   - cd leanbean-mobile
@@ -34,15 +34,15 @@ before_install:
   - cd ..
 
 before_script:
-  - mysql -e 'create database leanbean_test;'
+  #- mysql -e 'create database leanbean_test;'
 
 script:
   # Build backend
   - pwd
-  - cd leanbean-api
-  - mvn install -DskipTests=true
-  - mvn test
-  - cd ..
+  #- cd leanbean-api
+  #- mvn install -DskipTests=true
+  #- mvn test
+  #- cd ..
   # Build Android
   - pwd
   - cd leanbean-mobile
