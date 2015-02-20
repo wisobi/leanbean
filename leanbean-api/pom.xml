@@ -13,7 +13,7 @@
         <restlet.version>2.3-SNAPSHOT</restlet.version>
         <junit.version>4.11</junit.version>
         <log4j.version>1.2.16</log4j.version>
-        <hibernate.version>4.3.6.Final</hibernate.version>
+        <hibernate.version>4.3.8.Final</hibernate.version>
         <slf4j.version>1.6.4</slf4j.version>
         <logback.version>1.0.1</logback.version>
         <mysql.version>5.1.6</mysql.version>
@@ -66,11 +66,11 @@
             <version>${websocket.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
@@ -102,11 +102,21 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>tomcat-maven-plugin</artifactId>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
                 <configuration>
                     <server>AWSServer</server>
                     <path>/leanbean</path>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
         </plugins>
