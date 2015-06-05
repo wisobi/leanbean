@@ -1,5 +1,6 @@
 FROM ubuntu:14.04
 MAINTAINER Jonas Björk <bjork@wisobi.com>
+ENV DEBIAN_FRONTEND noninteractive
 
 # Setup node.js
 RUN apt-get update && apt-get install -y curl
@@ -26,10 +27,10 @@ RUN dpkg --add-architecture i386 && \
   zlib1g:i386
 # Download and install SDK
 WORKDIR /root
-RUN curl http://dl.google.com/android/android-sdk_r24.0.2-linux.tgz | tar xz
+RUN curl http://dl.google.com/android/android-sdk_r24.2-linux.tgz | tar xz
 ENV ANDROID_HOME /root/android-sdk-linux
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --all --filter build-tools-19.1.0,platform-tools,android-19,extra-android-support --no-ui --force
+RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --all --filter build-tools-22.0.1,platform-tools,android-22,extra-android-support --no-ui --force
 
 # Setup Maven
 ADD settings.xml /root/.m2/

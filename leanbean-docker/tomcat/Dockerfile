@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
 RUN cp /usr/share/java/mysql-connector-java.jar ${CATALINA_HOME}/lib
 RUN rm -r ${CATALINA_HOME}/webapps/ROOT ${CATALINA_HOME}/webapps/docs ${CATALINA_HOME}/webapps/examples ${CATALINA_HOME}/webapps/host-manager
 ADD tomcat-users.xml ${CATALINA_HOME}/conf/
+ADD setenv.sh ${CATALINA_HOME}/bin/
 
 EXPOSE 8080
 
