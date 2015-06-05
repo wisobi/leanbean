@@ -24,12 +24,16 @@
     <meta name="msapplication-tap-highlight" content="no"/>
     <meta name="viewport"
           content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, target-densitydpi=device-dpi"/>
+
+    <!-- cordova-plugin-whitelist settings -->
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
 
 
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"/>
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="jquery-mobile-1.4.5/jquery.mobile-1.4.5.min.css"/>
+    <script src="jquery-mobile-1.4.5/jquery-1.11.1.min.js"></script>
+    <script src="jquery-mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
@@ -40,6 +44,7 @@
 
         // Event handlers
         function onDeviceReady() {
+            console.log(device);
             leanbean.login(device);
         }
 
@@ -75,15 +80,15 @@
             
         <div role="main" class="ui-content">
             <form id="home-device-add-form"> 
-                    <h3 class="ui-title">What do you want to be called?</h3>
-                        <label for="home-device-add-alias"
-                               class="ui-hidden-accessible">Alias:</label>
-                        <input type="text" name="alias" id="home-device-add-alias" value=""
-                               placeholder="Alias" data-theme="a" data-mini="true">
+                        <h3 class="ui-title">What do you want to be called?</h3>
+                            <label for="home-device-add-alias"
+                                   class="ui-hidden-accessible">Alias:</label>
+                            <input type="text" name="alias" id="home-device-add-alias" value=""
+                                   placeholder="Alias" data-theme="a" data-mini="true">
 
-                    <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-a"
-                       data-rel="back" data-transition="flow" id="home-device-add-button">Save</a>
-                </form>  
+                        <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-a"
+                           data-rel="back" data-transition="flow" id="home-device-add-button">Save</a>
+            </form>  
         </div>
     </div>
     <!-- / home-device-add popup -->
@@ -139,7 +144,7 @@
         <form id="home-meeting-join-form" method="post">
             <div data-role="fieldcontain" class="ui-hide-label">
                 <label for="home-meeting-join-id">Lean Coffee ID</label>
-                <input type="number" name="meetingId" id="home-meeting-join-id" value=""
+                <input type="text" name="meetingId" id="home-meeting-join-id" value=""
                        placeholder="Lean Coffee ID"/>
             </div>
             <input type="button" name="home-meeting-join-button" id="home-meeting-join-button"

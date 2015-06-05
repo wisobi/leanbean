@@ -9,7 +9,7 @@ public class VoteTO implements Serializable {
 
   private long id;
   private long deviceId;
-  private long meetingId;
+  private String meetingId;
   private long[] topicIds;
 
   public VoteTO() {
@@ -28,9 +28,9 @@ public class VoteTO implements Serializable {
 
   public void setDeviceId(long deviceId) { this.deviceId = deviceId; }
 
-  public long getMeetingId() { return meetingId; }
+  public String getMeetingId() { return meetingId; }
 
-  public void setMeetingId(long meetingId) { this.meetingId = meetingId; }
+  public void setMeetingId(String meetingId) { this.meetingId = meetingId; }
 
   public long[] getTopicIds() {
     return topicIds;

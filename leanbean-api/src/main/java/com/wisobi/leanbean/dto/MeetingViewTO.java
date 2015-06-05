@@ -11,7 +11,7 @@ import java.util.SortedSet;
 public class MeetingViewTO implements Serializable {
 
   private String type = "meetingview";
-  private long id;
+  private String id;
   private String title;
   private SortedSet<TopicViewTO> topics;
   private DeviceTO device;
@@ -22,11 +22,11 @@ public class MeetingViewTO implements Serializable {
 
   public void setType(String type) { this.type = type; }
 
-  public long getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(String id) {
     this.id = id;
   }
 

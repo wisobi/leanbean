@@ -31,7 +31,8 @@ leanbean-api/src/main/webapp/META-INF/context.xml
 leanbean-api/src/main/resources/leanbean.properties
 # leanbean-api/src/test/resources/META-INF/persistence.xml
 
-# leanbean-web
+# leanbean-google
+leanbean-google/src/main/resourses/client_secrets.json
 
 # leanbean-mobile
 leanbean-mobile/platforms/*

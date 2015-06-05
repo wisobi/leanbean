@@ -3,7 +3,7 @@ var _ws;
 var leanbeanClient = {
 
     //_baseUrl: "http://10.0.2.2:8080/v1/",
-    _baseUrl: "http://api.leanbean.wisobi.com:8080/leanbean/v1/",
+    _baseUrl: "http://api.leanbean.wisobi.com/leanbean/v1/",
 
     postDevice: function(device, successCallback) {
         var url = this._baseUrl + "device/";
@@ -223,7 +223,7 @@ var leanbean = {
         var pageId = ui.toPage[0].id;
         if (pageId == 'meeting') {
             var meetingId = this._getState().meetingId;
-            _ws = new WebSocket("ws://api.leanbean.wisobi.com:8080/leanbean/ws/meeting/" + meetingId);
+            _ws = new WebSocket("ws://api.leanbean.wisobi.com/leanbean/ws/meeting/" + meetingId);
 
             _ws.onerror = function(event) {
 

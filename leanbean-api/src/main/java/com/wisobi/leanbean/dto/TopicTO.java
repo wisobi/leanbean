@@ -11,7 +11,7 @@ public class TopicTO implements Serializable {
   private long deviceId;
   private String title;
   private String pitch;
-  private long meetingId;
+  private String meetingId;
 
   public TopicTO() {
 
@@ -49,11 +49,11 @@ public class TopicTO implements Serializable {
     this.pitch = pitch;
   }
 
-  public long getMeetingId() {
+  public String getMeetingId() {
     return meetingId;
   }
 
-  public void setMeetingId(long meetingId) {
+  public void setMeetingId(String meetingId) {
     this.meetingId = meetingId;
   }
 }

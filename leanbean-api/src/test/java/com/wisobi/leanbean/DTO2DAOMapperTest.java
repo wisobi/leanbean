@@ -27,7 +27,7 @@ public class DTO2DAOMapperTest {
     long deviceId = 2;
 
     MeetingTO meetingTO = new MeetingTO();
-    meetingTO.setId(id);
+    meetingTO.setId(LeanBeanUtil.idEncode(id));
     meetingTO.setTitle(title);
     meetingTO.setStartDateTime(startDateTime);
     meetingTO.setDuration(duration);
@@ -56,7 +56,7 @@ public class DTO2DAOMapperTest {
     topicTO.setTitle(title);
     topicTO.setPitch(pitch);
     topicTO.setDeviceId(deviceId);
-    topicTO.setMeetingId(meetingId);
+    topicTO.setMeetingId(LeanBeanUtil.idEncode(meetingId));
 
     Topic topic = DTO2DAOMapper.mapTopic(topicTO);
 

@@ -5,6 +5,8 @@ import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.entity.Topic;
 import com.wisobi.leanbean.jpa.entity.Device;
 import com.wisobi.leanbean.jpa.entity.Vote;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,9 +17,13 @@ import java.util.Set;
  */
 public class DTO2DAOMapper {
 
+    final static Logger logger = LoggerFactory.getLogger(DTO2DAOMapper.class);
+
   public static Meeting mapMeeting(MeetingTO meetingTO) {
     Meeting meeting = new Meeting();
-    meeting.setId(meetingTO.getId());
+    if(meetingTO.getId() != null) {
+        meeting.setId(LeanBeanUtil.idDecode(meetingTO.getId()));
+    }
     meeting.setDuration(meetingTO.getDuration());
     meeting.setStartDateTime(meetingTO.getStartDateTime());
     meeting.setTitle(meetingTO.getTitle());
@@ -40,7 +46,8 @@ public class DTO2DAOMapper {
     topic.setDevice(device);
 
     Meeting meeting = new Meeting();
-    meeting.setId(topicTO.getMeetingId());
+    long meetingId = LeanBeanUtil.idDecode(topicTO.getMeetingId());
+    meeting.setId(meetingId);
     topic.setMeeting(meeting);
 
     return topic;
@@ -54,7 +61,8 @@ public class DTO2DAOMapper {
     vote.setDevice(device);
 
     Meeting meeting = new Meeting();
-    meeting.setId(voteTO.getMeetingId());
+    long meetingId = LeanBeanUtil.idDecode(voteTO.getMeetingId());
+    meeting.setId(meetingId);
     vote.setMeeting(meeting);
 
     String topicIds = LeanBeanUtil.arrayToString(voteTO.getTopicIds());

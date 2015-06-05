@@ -1,6 +1,8 @@
 package com.wisobi.leanbean.restlet.resource;
 
+import com.wisobi.leanbean.Hashids;
 import com.wisobi.leanbean.LeanBeanDao;
+import com.wisobi.leanbean.LeanBeanUtil;
 import com.wisobi.leanbean.dto.DAO2DTOMapper;
 import com.wisobi.leanbean.dto.DTO2DAOMapper;
 import com.wisobi.leanbean.dto.MeetingTO;
@@ -21,13 +23,14 @@ import org.slf4j.LoggerFactory;
  */
 public class MeetingResource extends ServerResource {
 
-  final static Logger logger = LoggerFactory.getLogger(MeetingResource.class);
+  final private static Logger logger = LoggerFactory.getLogger(MeetingResource.class);
 
-  private LeanBeanDao dao = new LeanBeanJpaDao();
+  final private LeanBeanDao dao = new LeanBeanJpaDao();
 
   @Get("json")
   public MeetingViewTO findMeetingById() {
-    long meetingId = Long.parseLong(getRequestAttributes().get("meeting-id").toString());
+    String hash = getRequestAttributes().get("meeting-id").toString();
+    long meetingId = LeanBeanUtil.idDecode(hash);
     return findMeetingById(meetingId);
   }
 

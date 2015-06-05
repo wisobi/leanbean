@@ -1,6 +1,7 @@
 package com.wisobi.leanbean.restlet.resource;
 
 import com.wisobi.leanbean.LeanBeanDao;
+import com.wisobi.leanbean.LeanBeanUtil;
 import com.wisobi.leanbean.dto.DTO2DAOMapper;
 import com.wisobi.leanbean.dto.VoteTO;
 import com.wisobi.leanbean.endpoint.MeetingEndpoint;
@@ -25,7 +26,8 @@ public class VoteResource extends ServerResource {
 
   @Put("json")
   public void addVotes(VoteTO voteTO) {
-    long meetingId = Long.parseLong(getRequestAttributes().get("meeting-id").toString());
+    String meetingHash = getRequestAttributes().get("meeting-id").toString();
+    long meetingId = LeanBeanUtil.idDecode(meetingHash);
     long deviceId = Long.parseLong(getRequestAttributes().get("device-id").toString());
 
     Vote vote = DTO2DAOMapper.mapVote(voteTO);

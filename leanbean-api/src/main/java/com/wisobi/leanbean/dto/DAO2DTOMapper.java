@@ -1,5 +1,6 @@
 package com.wisobi.leanbean.dto;
 
+import com.wisobi.leanbean.Hashids;
 import com.wisobi.leanbean.LeanBeanUtil;
 import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.entity.Topic;
@@ -20,10 +21,11 @@ import java.util.TreeSet;
 public class DAO2DTOMapper {
 
   final static Logger logger = LoggerFactory.getLogger(DAO2DTOMapper.class);
+  final static Hashids hashids = new Hashids("LeanBean");
 
   public static MeetingViewTO mapMeeting(Meeting meeting) {
     MeetingViewTO meetingViewTO = new MeetingViewTO();
-    meetingViewTO.setId(meeting.getId());
+    meetingViewTO.setId(hashids.encode(meeting.getId()));
     meetingViewTO.setTitle(meeting.getTitle());
     meetingViewTO.setDuration(meeting.getDuration());
     meetingViewTO.setStartDateTime(meeting.getStartDateTime());
