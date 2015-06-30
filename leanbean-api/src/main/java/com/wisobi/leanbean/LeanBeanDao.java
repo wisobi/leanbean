@@ -6,12 +6,15 @@ import com.wisobi.leanbean.jpa.entity.Topic;
 import com.wisobi.leanbean.jpa.entity.Device;
 import com.wisobi.leanbean.jpa.entity.Vote;
 
+import java.util.List;
+
 /**
  * Created by bjork on 25/08/14.
  */
 public interface LeanBeanDao {
 
   public Meeting findByMeetingId(long meetingId);
+  public List<Meeting> findMeetingsByDeviceId(long deviceId);
   public Device findByDeviceId(long deviceId);
   public Device findByDeviceUUID(String deviceUUID);
   public Topic findByTopicId(long topicId);

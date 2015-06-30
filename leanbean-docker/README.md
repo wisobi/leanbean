@@ -33,3 +33,8 @@ $ cd /opt/leanbean/leanbean-api
 $ mvn -Dmaven.tomcat.url=http://leanbean-app:8080/manager/text tomcat7:redeploy
 $ boot2docker ssh -vnNTL 5037:localhost:5037 -vnNTL 5554:localhost:5554 -vnNTL 5555:localhost:5555
 ```
+
+#### Deploy LeanBean App to Device
+```bash
+$ ./adb install -r ~/wisobi/leanbean/leanbean-mobile/platforms/android/build/outputs/apk/android-debug.apk
+```

@@ -72,6 +72,7 @@ public class MeetingEndpoint {
     session.getUserProperties().put("meetingId", meetingId);
     this.session = session;
     logger.debug("LeanBean OnOpen meetingId " + meetingId);
+    logger.debug("session.getMaxIdleTimeout = " + session.getMaxIdleTimeout());
   }
 
   @OnClose
@@ -96,4 +97,5 @@ public class MeetingEndpoint {
     logger.debug(message);
     //broadcast(message);
   }
+
 }

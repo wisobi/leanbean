@@ -1,10 +1,6 @@
 package com.wisobi.leanbean.restlet;
 
-import com.wisobi.leanbean.restlet.resource.DeviceResource;
-import com.wisobi.leanbean.restlet.resource.DeviceUUIDResource;
-import com.wisobi.leanbean.restlet.resource.MeetingResource;
-import com.wisobi.leanbean.restlet.resource.TopicResource;
-import com.wisobi.leanbean.restlet.resource.VoteResource;
+import com.wisobi.leanbean.restlet.resource.*;
 
 import org.restlet.Application;
 import org.restlet.Component;
@@ -23,14 +19,16 @@ public class LeanBeanApplication extends Application {
   @Override
   public Restlet createInboundRoot() {
     Router router = new Router(getContext());
-    router.attach("/v1/meeting/", MeetingResource.class);
-    router.attach("/v1/meeting/{meeting-id}", MeetingResource.class);
-    router.attach("/v1/device/", DeviceResource.class);
-    router.attach("/v1/device/{device-id}", DeviceResource.class);
+    router.attach("/v1/meetings/", MeetingResource.class);
+    router.attach("/v1/meetings/{meeting-id}", MeetingResource.class);
+    router.attach("/v1/meetings/{meeting-id}/devices/{device-id}/votes/", VoteResource.class);
+    router.attach("/v1/devices/{device-id}/meetings/", BrowseMeetingResource.class);
+    router.attach("/v1/devices/", DeviceResource.class);
+    router.attach("/v1/devices/{device-id}", DeviceResource.class);
     router.attach("/v1/device-uuid/{device-uuid}", DeviceUUIDResource.class);
-    router.attach("/v1/topic/", TopicResource.class);
-    router.attach("/v1/topic/{topic-id}", TopicResource.class);
-    router.attach("/v1/vote/{meeting-id}/{device-id}", VoteResource.class);
+    router.attach("/v1/topics/", TopicResource.class);
+    router.attach("/v1/topics/{topic-id}", TopicResource.class);
+
     router.attach("/v1/bootstrap", LeanBeanBootstrap.class);
     return router;
   }

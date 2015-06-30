@@ -6,7 +6,7 @@ var leanbeanClient = {
     _baseUrl: "http://api.leanbean.wisobi.com/leanbean/v1/",
 
     postDevice: function(device, successCallback) {
-        var url = this._baseUrl + "device/";
+        var url = this._baseUrl + "devices/";
         $.ajax({
                    headers: {
                        'Accept': 'application/json; charset=utf-8',
@@ -31,7 +31,7 @@ var leanbeanClient = {
     },
 
     putDevice: function(device, successCallback) {
-        var url = this._baseUrl + "device/" + device.id;
+        var url = this._baseUrl + "devices/" + device.id;
         $.ajax({
                    headers: {
                        'Accept': 'application/json; charset=utf-8',
@@ -60,7 +60,7 @@ var leanbeanClient = {
         if (meetingId == '' || meetingId == null) {
             return;
         }
-        var url = this._baseUrl + "meeting/" + meetingId;
+        var url = this._baseUrl + "meetings/" + meetingId;
         $.ajax({
                    type: "GET",
                    url: url,
@@ -81,8 +81,32 @@ var leanbeanClient = {
                })
     },
 
+    getDeviceMeetings: function (deviceId, successCallback, errorCallback) {
+        if (deviceId == '' || deviceId == null) {
+            return;
+        }
+        var url = this._baseUrl + "devices/" + deviceId + "/meetings/";
+        $.ajax({
+            type: "GET",
+            url: url,
+            datatype: "json",
+            success: function (meetingTOs) {
+                console.log("Successfully fetched meetings for device.");
+                if (successCallback) successCallback(meetingTOs);
+            },
+            error: function (jqXHR, ajaxOptions, thrownError) {
+                if (jqXHR.status == 404) {
+                    alert('404: Could not find meetings with activity from this device.');
+                } else {
+                    alert('Error _getMeeting: HTTP status ' + jqXHR.status);
+                }
+                if (errorCallback) errorCallback();
+            }
+        })
+    },
+
     postMeeting: function (meeting, successCallback) {
-        var url = this._baseUrl + "meeting/";
+        var url = this._baseUrl + "meetings/";
         $.ajax({
                    headers: {
                        'Accept': 'application/json; charset=utf-8',
@@ -107,7 +131,7 @@ var leanbeanClient = {
     },
 
     postTopic: function (topic) {
-        var url = this._baseUrl + "topic/";
+        var url = this._baseUrl + "topics/";
         $.ajax({
                    headers: {
                        'Accept': 'application/json; charset=utf-8',
@@ -118,14 +142,12 @@ var leanbeanClient = {
                    datatype: 'json',
                    data: JSON.stringify(topic),
                    success: function () {
-                       console.log("Successfully added topic.");
-                       // leanbean._getAndLoadMeeting();
-                   }
+                       console.log("Successfully added topic.");                   }
                })
     },
 
     putVote: function (vote) {
-        var url = this._baseUrl + "vote/" + vote.meetingId + "/" + vote.deviceId;
+        var url = this._baseUrl + "meetings/" + vote.meetingId + "/devices/" + vote.deviceId + "/votes/";
         $.ajax({
                    headers: {
                        'Accept': 'application/json; charset=utf-8',
@@ -145,7 +167,7 @@ var leanbeanClient = {
         if (topicId == '' || topicId == null) {
             return;
         }
-        var url = this._baseUrl + "topic/" + topicId;
+        var url = this._baseUrl + "topics/" + topicId;
         $.ajax({
                    type: "DELETE",
                    url: url,
@@ -173,13 +195,11 @@ var leanbeanClient = {
                    success: function (deviceTO) {
                        console.log("Successfully fetched device.");
                        if (successCallback) successCallback(deviceTO);
-                       //leanbean._handleLoginExistingDevice(deviceTO);
                    },
                    error: function (xhr, ajaxOptions, thrownError) {
                        if (xhr.status == 404) {
                            console.log('Error _getDevice: HTTP status ' + xhr.status);
                            if (errorCallback) errorCallback();
-                           //leanbean._handleLoginNewDevice(deviceTO);
                        } else {
                            alert('Error _getDevice: HTTP status ' + xhr.status);
                        }
@@ -212,9 +232,7 @@ var leanbean = {
         $(document).on('click', '#meeting-topic-add-button', this._meetingTopicAddButtonClick.bind(this));
         $(document).on('click', '#meeting-topic-delete-button', this._meetingTopicDeleteConfirm.bind(this));
         $(document).on('change', '#meeting-facilitate-checkbox', this._meetingFacilitateCheckboxChange.bind(this));
-
-        $(document).on("pagecontainerbeforeshow",
-                       this._pageContainerBeforeShow.bind(this));
+        $(document).on("pagecontainerbeforeshow", this._pageContainerBeforeShow.bind(this));
     },
 
     // Static Event Handlers
@@ -255,6 +273,11 @@ var leanbean = {
             for(var i = 0; i < recentMeetings.length; i++) {
                 console.log("Recent meeting " + i + " has meetingId " + recentMeetings[i]);
             }
+
+            // List recent meetings
+            //var deviceId = this._getSetting("device").id;
+            //var meetings = leanbeanClient.getDeviceMeetings(deviceId);
+            leanbean._loadRecentMeetings(this._getRecentMeetings());
         }
     },
 
@@ -377,7 +400,6 @@ var leanbean = {
     _getAndLoadMeeting: function() {
         var meetingId = this._getState().meetingId;
         this._setState("isFacilitator", false);
-        this._addRecentMeetings(meetingId);
         console.log("meetingId = " + meetingId);
         leanbeanClient.getMeeting(meetingId, leanbean._loadMeeting.bind(this));
     },
@@ -389,6 +411,8 @@ var leanbean = {
     },
 
     _loadMeeting: function (meeting) {
+        this._addRecentMeetings(meeting);
+
         console.log("_loadMeeting(): loading meeting with id " + meeting.id);
         document.querySelector('#meeting-header-text').innerHTML = meeting.title;
         document.querySelector('#meeting-topic-set').innerHTML = '';
@@ -510,6 +534,24 @@ var leanbean = {
         }
     },
 
+    _loadRecentMeetings: function(meetings) {
+        document.querySelector('#home-meeting-recent').innerHTML = ' <h2>Recent Meetings</h2>';
+        var meeting;
+        var recentDivs = document.createElement('div');
+        if($.isEmptyObject(meetings)) {
+            $(recentDivs).html("No recent meetings");
+        } else {
+            for (var i = meetings.length - 1; i >= 0; i--) {
+                meeting = meetings[i];
+                var recentDiv = document.createElement('div');
+                $(recentDiv).html('<p>' + meeting.title + ' (' + meeting.id +')</p>')
+                    .attr("id", "home-meeting-recent-" + meeting.id);
+                $(recentDivs).append(recentDiv);
+            }
+        }
+        document.querySelector('#home-meeting-recent').appendChild(recentDivs);
+    },
+
     // Utility functions
 
     login: function (device) {
@@ -528,6 +570,7 @@ var leanbean = {
     },
 
     _formDataToJSON: function (formId) {
+        console.log("_formDataToJSON: " + formId);
         var jsonObject = {};
         var formData = $(formId).serializeArray();
         for (i = 0; i < formData.length; i++) {
@@ -577,17 +620,17 @@ var leanbean = {
 
     _getRecentMeetings: function() {
         var recentMeetings = this._getState().recentMeetings;
-        return recentMeeting == null ? [] : recentMeetings;
+        return recentMeetings == null ? [] : recentMeetings;
     },
 
-    _addRecentMeetings: function(meetingId) {
+    _addRecentMeetings: function(meeting) {
         var recentMeetings = this._getState().recentMeetings;
         recentMeetings = recentMeetings == null ? [] : recentMeetings;
 
         // Check if meeting already is in stack
         var index;
         for (var i = 0; i < recentMeetings.length; i++) {
-            if(recentMeetings[i] == meetingId) {
+            if(recentMeetings[i].id == meeting.id) {
                 index = i;
                 break;
             }
@@ -597,11 +640,11 @@ var leanbean = {
             // Meeting is in stack, move it the top
             var oldTop = recentMeetings[0];
             recentMeetings.splice(index, 1);
-            recentMeetings.push(meetingId);
+            recentMeetings.push(meeting);
 
         } else {
             // Meeting not in stack, add it to top and crop stack
-            recentMeetings.push(meetingId);
+            recentMeetings.push(meeting);
             recentMeetings.splice(5);
         }
         this._setState("recentMeetings", recentMeetings);

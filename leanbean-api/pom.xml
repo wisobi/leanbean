@@ -19,6 +19,7 @@
         <mysql.version>5.1.6</mysql.version>
         <websocket.version>1.0</websocket.version>
         <hsqldb.version>2.3.0</hsqldb.version>
+        <jetty.version>9.3.0.v20150612</jetty.version>
     </properties>
 
     <repositories>
@@ -97,6 +98,13 @@
             <version>${hsqldb.version}</version>
             <scope>test</scope>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty.version}</version>
+        </dependency>
+        -->
     </dependencies>
 
     <build>

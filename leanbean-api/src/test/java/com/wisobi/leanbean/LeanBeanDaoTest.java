@@ -13,6 +13,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -350,6 +352,14 @@ public class LeanBeanDaoTest {
 
     Vote vote = new Vote(device, meeting, "6");
     dao.addVote(vote);
+  }
+
+  @Test
+  public void findMeetingsByDeviceId() {
+    List<Meeting> meetings = dao.findMeetingsByDeviceId(1);
+    for(Meeting meeting : meetings) {
+        System.out.println(meeting.getId());
+    }
   }
 
 }

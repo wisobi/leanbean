@@ -7,6 +7,8 @@ import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.entity.Topic;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
@@ -17,7 +19,9 @@ import static org.junit.Assert.assertEquals;
  */
 public class DTO2DAOMapperTest {
 
-  @Test
+    final static Logger logger = LoggerFactory.getLogger(DTO2DAOMapperTest.class);
+
+    @Test
   public void testMapMeeting() {
 
     long id = 1;
@@ -65,6 +69,15 @@ public class DTO2DAOMapperTest {
     assertEquals(pitch, topic.getPitch());
     assertEquals(deviceId, topic.getDevice().getId());
     assertEquals(meetingId, topic.getMeeting().getId());
+  }
+
+  @Test
+  public void testPrintIds() {
+
+    for(int i = 1; i < 10; i++) {
+        logger.debug(i + ": " + LeanBeanUtil.idEncode(i));
+    }
+
   }
 /*
   @Test
