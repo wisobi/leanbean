@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.wisobi.leanbean" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.wisobi.leanbean" version="0.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>LeanBean</name>
     <description>
         A LeanBean mobile application.
@@ -9,7 +9,7 @@
     </author>
     <content src="index.html" />
     <access origin="*" />
-
+    <icon src="res/icon.png" />
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarBackgroundColor" value="#e9e9e9" />
     <preference name="StatusBarStyle" value="default" />

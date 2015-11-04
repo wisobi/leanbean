@@ -1,10 +1,10 @@
-FROM ubuntu:14.04
+FROM ubuntu:15.04
 MAINTAINER Jonas Björk <bjork@wisobi.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 # Setup node.js
 RUN apt-get update && apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup | sudo bash -
+RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
 
 # Install dependencies
 RUN apt-get install -y \
@@ -13,7 +13,7 @@ RUN apt-get install -y \
   maven \
   mysql-client-5.6 \
   nodejs \
-  openjdk-7-jdk
+  openjdk-8-jdk
 
 # Install Cordova
 RUN npm install -g cordova
@@ -38,6 +38,6 @@ ADD settings.xml /root/.m2/
 # Setup Git
 ADD .gitconfig /root/.gitconfig
 
-ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
 CMD ["bash"]

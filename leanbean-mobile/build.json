@@ -1,0 +1,18 @@
+{
+  "android": {
+    "debug": {
+      "keystore": "debug.keystore",
+      "storePassword": "android",
+      "alias": "androiddebugkey",
+      "password" : "android",
+      "keystoreType": "jks"
+    },
+    "release": {
+      "keystore": "leanbean.keystore",
+      "storePassword": "",
+      "alias": "leanbean-release",
+      "password" : "",
+      "keystoreType": "jks"
+    }
+  }
+}

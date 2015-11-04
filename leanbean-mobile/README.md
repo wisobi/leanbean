@@ -1,0 +1,1 @@
+keytool -genkey -v -keystore leanbean.keystore -alias leanbean-release -keyalg RSA -keysize 2048 -validity 10000

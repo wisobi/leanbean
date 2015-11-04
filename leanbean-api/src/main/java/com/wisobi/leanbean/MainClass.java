@@ -11,12 +11,17 @@ import java.util.Random;
 public class MainClass {
 
   public static void main(String[] args) {
-    long[] ids = {1, 4, 7};
+    long[] ids = {1, 2, 3, 4, 5, 6, 7};
 
     System.out.println(Arrays.toString(ids));
     System.out.println(MainClass.arrayToString(ids));
 
     Hashids hashids = new Hashids("LeanBean");
+      System.out.println(hashids.encode(1));
+      System.out.println(hashids.encode(2));
+      System.out.println(hashids.encode(3));
+      System.out.println(hashids.encode(4));
+      System.out.println(hashids.encode(5));
     int x = 2;
     for(int i = 1; i < 1000000; i++) {
         String hash = hashids.encode(i);
