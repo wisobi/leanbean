@@ -4,7 +4,7 @@
     <groupId>com.wisobi.leanbean</groupId>
     <artifactId>leanbean-google</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.1-SNAPSHOT</version>
     <name>leanbean-google</name>
     <url>http://maven.apache.org</url>
     <properties>
@@ -48,6 +48,22 @@
                             <mainClass>com.wisobi.leanbean.BasicUploadApk</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.wisobi.leanbean.BasicUploadApk</mainClass>
+                    <executable>maven</executable>
                 </configuration>
             </plugin>
             <plugin>

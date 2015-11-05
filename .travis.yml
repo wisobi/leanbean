@@ -1,42 +1,61 @@
-language: objective-c
-xcode_project: leanbean-mobile/platforms/ios/LeanBean.xcodeproj
-xcode_scheme: leanbean-mobile/platforms/ios/LeanBean
-sudo: false
+sudo: required
+
+language: ruby
+
+services:
+  - docker
 
 before_install:
-  # Setup JVM and tools
-  - export JAVA_HOME=$(/usr/libexec/java_home)
-  - brew install ant
-  - brew install maven
-  # Install Android SDK
-  - wget http://dl.google.com/android/android-sdk_r24.0.1-linux.tgz
-  - tar xzf android-sdk_r24.0.1-linux.tgz
-  - export ANDROID_HOME=$PWD/android-sdk-linux
-  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-  - ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --all --filter build-tools-19.1.0,platform-tools,android-19,extra-android-support --no-ui --force
-  # Install Cordova
-  - npm install -g cordova
-  # Install platforms and plugins for leanbean-mobile
-  - cd leanbean-mobile
-  - cordova platform add android
-  - cordova platform add ios
-  - cordova plugin add org.apache.cordova.device
-  - cordova plugin add org.apache.cordova.statusbar
-  - cordova plugin add https://github.com/EddyVerbruggen/LaunchMyApp-PhoneGap-Plugin.git --variable URL_SCHEME=leanbean
-  # Go back to root directory
-  - cd ..
+# Pull images
+- docker pull wisobi/leanbean-build
+- docker pull wisobi/leanbean-nginx
+- docker pull wisobi/leanbean-tomcat
+- docker pull wisobi/leanbean-mysql
+# Set credentials
+
+install:
+- docker-compose up -d
 
 before_script:
+# Deploy LeanBean API to test container
+- docker run wisobi/leanbean-build /bin/sh -c "bash leanbean-api/deploy-tomcat.sh test maven-user password"
 
 script:
-  # Build backend
-  - pwd
-  - cd leanbean-api
-  - mvn install -DskipTests=true
-  - mvn test
-  - cd ..
-  # Build Android and IOS
-  - pwd
-  - cd leanbean-mobile
-  - cordova build android
-  - cordova build ios
+# Run end to end test
+# TODO: create test script
+
+after_success:
+# Deploy LeanBean API
+#- docker run wisobi/leanbean-build /bin/sh -c "bash leanbean-api/deploy-tomcat.sh prod $TOMCAT_USER $TOMCAT_PASS"
+# Deploy LeanBean Android to alpha track
+#- docker run wisobi/leanbean-build /bin/sh -c "bash leanbean-google/deploy-android.sh"
+
+after_failure: true
+
+before_deploy:
+- bash update-versions.sh
+
+deploy:
+  provider: releases
+    api-key: "GITHUB OAUTH TOKEN"
+  file:
+    - leanbean-mobile/config.xml
+    - leanbean-api/pom.xml
+    - leanbean-google/pom.xml
+  skip_cleanup: true
+  on:
+    tags: true
+    rvm: 2.0.0
+
+after_deploy: true
+
+after_script:
+- docker-compose stop
+- docker-compose rm -f
+
+env:
+  global:
+    # travis encrypt TOMCAT_USER=username
+    - secure: "iSFIP6uB11Ba9t3ld+UXgyFEsc0/gF0nGspkj2kvuX7Hk2bOybQ+L+atITFss9dFrYJXCzKQOu5S6G0OY2icKpT6l2JA/4YesZmTBJoBAr+4rwVngTy7r+EpGNSVgRA0gecAjGP/HQbD5Ae0LPXRGueeBv0Og1SzuMHpUzNN4g4="
+    # travis encrypt TOMCAT_PASS=password
+    - secure: "S6xkNhNRvlt5UUFK416dCRIpv8eWijf6ecIWNdc8c4HpKoc7F9FknsGcyRwdBHH9BxXbXKxRrFIXRDtunRkuprmmDN0uqvOMwMz156dcVuiQkLTY+fiuaAUuoTt4d629nHxLBB7NjJDJqWaNxQ1Q/D8r6AT+GuyVvYB+3MbIbPk="

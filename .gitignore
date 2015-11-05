@@ -27,11 +27,6 @@ dependency-reduced-pom.xml
 *.ear
 hs_err_pid*
 
-# leanbean-api - credential resources
-leanbean-api/src/main/webapp/META-INF/context.xml
-leanbean-api/src/main/resources/leanbean.properties
-# leanbean-api/src/test/resources/META-INF/persistence.xml
-
 # leanbean-google
 leanbean-google/src/main/resources/android-release.apk
 leanbean-google/src/main/resources/key.p12

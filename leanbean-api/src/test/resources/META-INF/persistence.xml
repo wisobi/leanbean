@@ -17,7 +17,7 @@
             <property name="hibernate.connection.username" value="sa"/>
             <property name="hibernate.show_sql" value="true"/>
             <!-- Properties that are duplicated in both main and test -->
-            <property name="hibernate.max_fetch_depth" value="5"/>
+            <property name="hibernate.max_fetch_depth" value="4"/>
         </properties>
     </persistence-unit>
 </persistence>

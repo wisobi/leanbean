@@ -9,16 +9,9 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | bash -
 # Install dependencies
 RUN apt-get install -y \
   ant \
-  build-essential \
-  git \
   maven \
-  mysql-client-5.6 \
   nodejs \
-  openjdk-8-jdk \
-  ruby-dev
-
-# Install Travis
-RUN gem install travis --no-rdoc --no-ri
+  openjdk-8-jdk
 
 # Install Cordova
 RUN npm install -g cordova
