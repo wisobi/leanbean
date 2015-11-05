@@ -8,7 +8,7 @@ if [ -z "$1" ]
                 URL="http://aws.asdf.com"
                 ;;
         "test") echo "Deploying to environment test."
-                URL="http://leanbean-app:8080"
+                URL="http://leanbean-api:8080"
                 ;;
         *)      echo "Unknown environment, cannot deploy."
                 exit 127;
