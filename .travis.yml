@@ -6,7 +6,7 @@ services:
 - docker
 
 before_install:
-- cp -r leanbean-api leanbean-google leanbean-mobile leanbean-docker
+- cp -r leanbean-api leanbean-google leanbean-mobile leanbean-docker/build
 - docker build -t wisobi/leanbean-build leanbean-docker/build
 - docker pull wisobi/leanbean-nginx
 - docker pull wisobi/leanbean-tomcat
@@ -15,19 +15,20 @@ before_install:
 install:
 - cd leanbean-docker
 - docker-compose up -d
+- cd ..
 
 before_script:
  # Deploy LeanBean API to test container
 - docker run wisobi/leanbean-build
-  /bin/sh -c "cd /root/leanbean-api/; bash deploy-tomcat.sh test maven-user password"
+  /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test maven-user password"
 
 script: true
 
 after_success: true
 # Deploy LeanBean API
-#- docker run wisobi/leanbean-build /bin/sh -c "bash leanbean-api/deploy-tomcat.sh prod $TOMCAT_USER $TOMCAT_PASS"
+#- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api; bash deploy-tomcat.sh prod $TOMCAT_USER $TOMCAT_PASS"
 # Deploy LeanBean Android to alpha track
-#- docker run wisobi/leanbean-build /bin/sh -c "bash leanbean-google/deploy-android.sh"
+#- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-google; bash deploy-android.sh"
 
 after_failure: true
 
