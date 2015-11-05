@@ -30,9 +30,6 @@ ENV ANDROID_HOME /root/android-sdk-linux
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
 RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --all --filter build-tools-22.0.1,platform-tools,android-22,extra-android-support --no-ui --force
 
-# Setup Maven
-ADD settings.xml /root/.m2/
-
 # Setup Git
 ADD .gitconfig /root/.gitconfig
 

@@ -3,28 +3,25 @@ sudo: required
 language: ruby
 
 services:
-  - docker
+- docker
 
 before_install:
-# Pull images
 - docker pull wisobi/leanbean-build
 - docker pull wisobi/leanbean-nginx
 - docker pull wisobi/leanbean-tomcat
 - docker pull wisobi/leanbean-mysql
-# Set credentials
 
 install:
 - docker-compose up -d
 
 before_script:
-# Deploy LeanBean API to test container
-- docker run wisobi/leanbean-build /bin/sh -c "bash leanbean-api/deploy-tomcat.sh test maven-user password"
+ # Deploy LeanBean API to test container
+- docker run wisobi/leanbean-build /bin/sh -c "bash leanbean-api/deploy-tomcat.sh
+  test maven-user password"
 
-script:
-# Run end to end test
-# TODO: create test script
+script: true
 
-after_success:
+after_success: true
 # Deploy LeanBean API
 #- docker run wisobi/leanbean-build /bin/sh -c "bash leanbean-api/deploy-tomcat.sh prod $TOMCAT_USER $TOMCAT_PASS"
 # Deploy LeanBean Android to alpha track
@@ -35,18 +32,6 @@ after_failure: true
 before_deploy:
 - bash update-versions.sh
 
-deploy:
-  provider: releases
-    api-key: "GITHUB OAUTH TOKEN"
-  file:
-    - leanbean-mobile/config.xml
-    - leanbean-api/pom.xml
-    - leanbean-google/pom.xml
-  skip_cleanup: true
-  on:
-    tags: true
-    rvm: 2.0.0
-
 after_deploy: true
 
 after_script:
@@ -55,7 +40,19 @@ after_script:
 
 env:
   global:
-    # travis encrypt TOMCAT_USER=username
-    - secure: "iSFIP6uB11Ba9t3ld+UXgyFEsc0/gF0nGspkj2kvuX7Hk2bOybQ+L+atITFss9dFrYJXCzKQOu5S6G0OY2icKpT6l2JA/4YesZmTBJoBAr+4rwVngTy7r+EpGNSVgRA0gecAjGP/HQbD5Ae0LPXRGueeBv0Og1SzuMHpUzNN4g4="
-    # travis encrypt TOMCAT_PASS=password
-    - secure: "S6xkNhNRvlt5UUFK416dCRIpv8eWijf6ecIWNdc8c4HpKoc7F9FknsGcyRwdBHH9BxXbXKxRrFIXRDtunRkuprmmDN0uqvOMwMz156dcVuiQkLTY+fiuaAUuoTt4d629nHxLBB7NjJDJqWaNxQ1Q/D8r6AT+GuyVvYB+3MbIbPk="
+  # travis encrypt TOMCAT_USER=username
+  - secure: iSFIP6uB11Ba9t3ld+UXgyFEsc0/gF0nGspkj2kvuX7Hk2bOybQ+L+atITFss9dFrYJXCzKQOu5S6G0OY2icKpT6l2JA/4YesZmTBJoBAr+4rwVngTy7r+EpGNSVgRA0gecAjGP/HQbD5Ae0LPXRGueeBv0Og1SzuMHpUzNN4g4=
+  # travis encrypt TOMCAT_PASS=password
+  - secure: S6xkNhNRvlt5UUFK416dCRIpv8eWijf6ecIWNdc8c4HpKoc7F9FknsGcyRwdBHH9BxXbXKxRrFIXRDtunRkuprmmDN0uqvOMwMz156dcVuiQkLTY+fiuaAUuoTt4d629nHxLBB7NjJDJqWaNxQ1Q/D8r6AT+GuyVvYB+3MbIbPk=
+
+deploy:
+  provider: releases
+  api_key:
+    secure: Cod8Afr5lS4R2LX5IB5KAckCxNyPWZL3fJb2qE62+Y4E41N9XK+0WETpvvCyg2hDFob60B+Zsk9lTTvnbtqnB72gZwleOe4gYg7ovRcrZL36iHR4XDE9MVAeZcBSKK1SwRIHwMWteQhNOEQw8OoHXzmzJnnitC9FsPdg8qiBk+M=
+  file:
+    - leanbean-api/pom.xml
+    - leanbean-google/pom.xml
+    - leanbean-mobile/context.xml
+  skip_cleanup: true
+  on:
+    repo: wisobi/leanbean

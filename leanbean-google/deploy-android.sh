@@ -7,7 +7,7 @@ fi
 
 if [ -z "$2" ]
   then
-    echo "No password for certificate provided."
+    echo "No password for key provided."
     exit 127
 fi
 cd ../leanbean-mobile;
