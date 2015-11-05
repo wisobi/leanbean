@@ -34,7 +34,9 @@ RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --
 ADD .gitconfig /root/.gitconfig
 
 # Add source code to build
-ADD leanbean-api leanbean-google leanbean-mobile /opt/leanbean/
+ADD leanbean-api /opt/leanbean/leanbean-api
+ADD leanbean-google /opt/leanbean/leanbean-google
+ADD leanbean-mobile /opt/leanbean/leanbean-mobile
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 

@@ -19,8 +19,7 @@ install:
 
 before_script:
  # Deploy LeanBean API to test container
-- docker run wisobi/leanbean-build
-  /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test maven-user password"
+- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test maven-user password"
 
 script: true
 
