@@ -6,7 +6,7 @@ services:
 - docker
 
 before_install:
-- docker pull wisobi/leanbean-build
+- docker build -t wisobi/leanbean-build leanbean-docker/build
 - docker pull wisobi/leanbean-nginx
 - docker pull wisobi/leanbean-tomcat
 - docker pull wisobi/leanbean-mysql
@@ -18,8 +18,7 @@ install:
 before_script:
  # Deploy LeanBean API to test container
 - docker run wisobi/leanbean-build
-  -v leanbean-api:/opt/leanbean/leanbean-api
-  /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test maven-user password"
+  /bin/sh -c "cd /root/leanbean-api/; bash deploy-tomcat.sh test maven-user password"
 
 script: true
 
