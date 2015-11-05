@@ -6,6 +6,7 @@ services:
 - docker
 
 before_install:
+- cp -r leanbean-api leanbean-google leanbean-mobile leanbean-docker
 - docker build -t wisobi/leanbean-build leanbean-docker/build
 - docker pull wisobi/leanbean-nginx
 - docker pull wisobi/leanbean-tomcat
