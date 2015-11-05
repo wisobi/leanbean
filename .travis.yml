@@ -12,6 +12,7 @@ before_install:
 - docker pull wisobi/leanbean-mysql
 
 install:
+- cd leanbean-docker
 - docker-compose up -d
 
 before_script:
