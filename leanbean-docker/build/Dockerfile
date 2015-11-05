@@ -33,6 +33,9 @@ RUN ( sleep 5 && while [ 1 ]; do sleep 1; echo y; done ) | android update sdk --
 # Setup Git
 ADD .gitconfig /root/.gitconfig
 
+# Setup Maven
+ADD settings.xml /root/.m2/
+
 # Add source code to build
 ADD leanbean-api /opt/leanbean/leanbean-api
 ADD leanbean-google /opt/leanbean/leanbean-google

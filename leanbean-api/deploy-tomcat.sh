@@ -8,7 +8,7 @@ if [ -z "$1" ]
                 URL="http://aws.asdf.com"
                 ;;
         "test") echo "Deploying to environment test."
-                URL="http://leanbean-api:8080"
+                URL="http://leanbean-proxy"
                 ;;
         *)      echo "Unknown environment, cannot deploy."
                 exit 127;
@@ -32,8 +32,6 @@ fi
 
 
 CMD="mvn --batch-mode \
--Dtomcat.username=${TOMCAT_USER} \
--Dtomcat.password=${TOMCAT_PASS} \
 -Dmaven.tomcat.url=${URL}/manager/text \
 tomcat7:redeploy"
 echo "Running $CMD"

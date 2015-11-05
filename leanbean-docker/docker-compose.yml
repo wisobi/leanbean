@@ -1,12 +1,15 @@
 leanbean-proxy:
+  container_name: leanbean-proxy
   image: wisobi/leanbean-nginx
   ports:
     - "80:80"
   links:
     - leanbean-api
 leanbean-api:
+  container_name: leanbean-api
   image: wisobi/leanbean-tomcat
   links:
    - leanbean-db
 leanbean-db:
+  container_name: leanbean-db
   image: wisobi/leanbean-mysql
