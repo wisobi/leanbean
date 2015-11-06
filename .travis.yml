@@ -22,7 +22,7 @@ before_script:
 - docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test"
 
 script:
-- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/; bash test.sh leanbean-proxy"
+- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/; bash test.sh localhost"
 
 after_success:
 # Deploy LeanBean API
