@@ -22,7 +22,7 @@ before_script:
 - docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test"
 
 script:
-- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/; bash test.sh localhost"
+- docker run wisobi/leanbean-build /bin/sh -c "curl -H \"Content-Type: application/json\" -X POST -d '{\"alias\":\"Bob\",\"uuid\":\"1ab9ffd8d83abg2eq2\"}' http://192.168.99.100/leanbean/v1/devices/"
 
 after_success:
 # Deploy LeanBean API
