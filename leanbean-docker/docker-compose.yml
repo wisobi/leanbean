@@ -2,7 +2,7 @@ leanbean-proxy:
   container_name: leanbean-proxy
   image: wisobi/leanbean-nginx
   ports:
-    - "80:80"
+    - "127.0.0.1:80:80"
   links:
     - leanbean-api
 leanbean-api:
