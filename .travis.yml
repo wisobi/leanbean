@@ -6,7 +6,7 @@ services:
 - docker
 
 before_install:
-- cp -r leanbean-api leanbean-google leanbean-mobile test.sh leanbean-docker/build
+- cp -r leanbean-api leanbean-google leanbean-mobile leanbean-docker/build
 - docker build -t wisobi/leanbean-build leanbean-docker/build
 - docker pull wisobi/leanbean-nginx
 - docker pull wisobi/leanbean-tomcat
@@ -22,7 +22,7 @@ before_script:
 - docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test"
 
 script:
-- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanvean/; bash test.sh leanbean-proxy"
+- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/; bash test.sh leanbean-proxy"
 
 after_success:
 # Deploy LeanBean API

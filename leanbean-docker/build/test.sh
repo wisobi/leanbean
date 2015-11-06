@@ -5,7 +5,10 @@ if [ -z "$1" ]
     exit 127
 fi
 
-HTTP_STATUS=$(curl -H "Content-Type: application/json" -s -o /dev/null -w "%{http_code}" -X POST -d '{"alias":"Bob","uuid":"1ab9f8ta32bg2eq2"}' http://$1/leanbean/v1/devices/)
+CMD="curl -H \"Content-Type: application/json\" -s -o /dev/null -w \"%{http_code}\" -X POST -d '{\"alias\":\"Bob\",\"uuid\":\"1ab9f8ta452bg2eq2\"}' http://$1/leanbean/v1/devices/"
+echo "Running $CMD"
+HTTP_STATUS=$(eval $CMD)
+echo "HTTP Status ${HTTP_STATUS}"
 
 if [ $HTTP_STATUS -eq 201 ]
 then
