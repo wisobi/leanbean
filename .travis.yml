@@ -24,7 +24,7 @@ before_script:
 script:
 - bash test.sh $(docker-machine ip leanbean)
 
-after_success: true
+after_success:
 # Deploy LeanBean API
 #- docker run --name leanbean-buid wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh prod"
 # Deploy LeanBean Android to alpha track
