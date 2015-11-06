@@ -1,4 +1,4 @@
-FROM tomcat:8-jre7
+FROM tomcat:8-jre8
 MAINTAINER Jonas Björk <bjork@wisobi.com>
 
 # Install dependencies

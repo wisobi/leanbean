@@ -16,21 +16,6 @@ if [ -z "$1" ]
     esac
 fi
 
-if [ -z "$2" ]
-  then
-    echo "No Tomcat user provided"
-  else
-    TOMCAT_USER=$2
-fi
-
-if [ -z "$3" ]
-  then
-    echo "No Tomcat password provided"
-  else
-    TOMCAT_PASS=$3
-fi
-
-
 CMD="mvn --batch-mode \
 -Dmaven.tomcat.url=${URL}/manager/text \
 tomcat7:redeploy"
