@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-curl -H "Content-Type: application/json" -s -o /dev/null -w "%{http_code}" -X POST -d '{"alias":"Bob","uuid":"1ab9f8ta452bg2eq2"}' http://leanbean-proxy/leanbean/v1/devices/
+HTTP_STATUS=$(curl -H "Content-Type: application/json" -s -o /dev/null -w "%{http_code}" -X POST -d '{"alias":"Bob","uuid":"1ab9f8ta452bg2eq2"}' http://leanbean-proxy/leanbean/v1/devices/)
+echo "HTTP_STATUS is $HTTP_STATUS"
 
 : <<'END'
 if [ -z "$1" ]
