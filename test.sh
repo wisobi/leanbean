@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 if [ -z "$1" ]
   then
-    echo "No ip for leanbean-proxy provided. Run ./test.sh $(docker-machine ip leanbean)"
+    echo "No ip for leanbean-proxy provided. On OS X, run ./test.sh $(docker-machine ip leanbean)"
     exit 127
 fi
 

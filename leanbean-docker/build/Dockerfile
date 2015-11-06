@@ -5,5 +5,6 @@ ENV DEBIAN_FRONTEND noninteractive
 ADD leanbean-api /opt/leanbean/leanbean-api
 ADD leanbean-google /opt/leanbean/leanbean-google
 ADD leanbean-mobile /opt/leanbean/leanbean-mobile
+ADD test.sh /opt/leanbean/test.sh
 
 CMD ["bash"]
