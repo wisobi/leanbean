@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+curl -H "Content-Type: application/json" -s -o /dev/null -w "%{http_code}" -X POST -d '{"alias":"Bob","uuid":"1ab9f8ta452bg2eq2"}' http://leanbean-proxy/leanbean/v1/devices/
+
+: <<'END'
 if [ -z "$1" ]
   then
     echo "No ip for leanbean-proxy provided. On OS X, run ./test.sh $(docker-machine ip leanbean)"
@@ -18,3 +21,4 @@ else
   echo "Test failures"
   exit 1;
 fi
+END
