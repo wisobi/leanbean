@@ -17,13 +17,11 @@ install:
 - docker-compose up -d
 - cd ..
 
-before_script:
- # Deploy LeanBean API to test container
-- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/; bash test.sh leanbean-proxy"
-- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test"
+before_script: true
 
 script:
-- docker ps -a
+ # Deploy LeanBean API to test container
+- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test"
 - docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/; bash test.sh leanbean-proxy"
 
 after_success:
