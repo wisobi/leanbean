@@ -19,10 +19,10 @@ install:
 
 before_script:
  # Deploy LeanBean API to test container
-- docker run --name leanbean-buid wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test"
+- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test"
 
 script:
-- docker run --name leanbean-buid wisobi/leanbean-build /bin/sh -c "cd /opt/leanvean/; bash test.sh leanbean-proxy"
+- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanvean/; bash test.sh leanbean-proxy"
 
 after_success:
 # Deploy LeanBean API
