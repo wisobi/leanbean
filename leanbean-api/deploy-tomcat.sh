@@ -16,8 +16,6 @@ if [ -z "$1" ]
     esac
 fi
 
-CMD="mvn --batch-mode \
--Dmaven.tomcat.url=${URL}/manager/text \
-tomcat7:redeploy"
+CMD="mvn --batch-mode -Dmaven.tomcat.url=${URL}/manager/text tomcat7:redeploy"
 echo "Running $CMD"
 eval $CMD

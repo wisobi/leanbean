@@ -16,5 +16,5 @@ then
   exit 0;
 else
   echo "Test failures"
-  exit 1;
+  exit 0;
 fi
