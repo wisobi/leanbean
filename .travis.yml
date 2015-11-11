@@ -6,7 +6,11 @@ services:
 - docker
 
 before_install:
+# Decrypt key for deploying to Play store
+- openssl aes-256-cbc -K $encrypted_7ee6285e252a_key -iv $encrypted_7ee6285e252a_iv -in leanbean-google/src/main/resources/key.p12.enc -out leanbean-google/src/main/resources/key.p12 -d
+# Add source code to build container
 - cp -r leanbean-api leanbean-google leanbean-mobile leanbean-docker/build
+# Build and pull containers
 - docker build -t wisobi/leanbean-build leanbean-docker/build
 - docker pull wisobi/leanbean-nginx
 - docker pull wisobi/leanbean-tomcat
@@ -29,7 +33,7 @@ after_success:
 # Deploy LeanBean API
 #- docker run --name leanbean-buid wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh prod"
 # Deploy LeanBean Android to alpha track
-- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-google; bash deploy-android.sh"
+- docker exec -d leanbean-build sh -c  "cd /opt/leanbean/leanbean-google && bash deploy-android.sh"
 
 after_failure:
 - docker logs --tail=100 leanbean-proxy
@@ -42,6 +46,7 @@ before_deploy:
 after_deploy: true
 
 after_script:
+- docker stop leanbean-build
 - docker-compose stop
 - docker-compose rm -f
 
