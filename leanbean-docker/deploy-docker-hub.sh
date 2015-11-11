@@ -8,4 +8,5 @@ docker login
 docker push wisobi/leanbean-tomcat
 docker push wisobi/leanbean-mysql
 docker push wisobi/leanbean-nginx
+docker push wisobi/leanbean-dev
 
