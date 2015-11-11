@@ -15,6 +15,6 @@ then
   echo "Test run successful"
   exit 0;
 else
-  echo "Test failures"
+  echo "Test failures."
   exit 0;
 fi

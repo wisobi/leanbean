@@ -21,10 +21,9 @@ before_script: true
 
 script:
  # Deploy LeanBean API to test container
-- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/; bash test.sh leanbean-proxy"
-- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/; bash test.sh leanbean-proxy"
-- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/leanbean-api/; bash deploy-tomcat.sh test"
-- docker run wisobi/leanbean-build /bin/sh -c "cd /opt/leanbean/; bash test.sh leanbean-proxy"
+- docker run -it -d --name leanbean-build wisobi/leanbean-build
+- docker exec -d leanbean-build cd /opt/leanbean/ && bash test.sh leanbean-proxy
+- docker exec -d leanbean-build cd /opt/leanbean/leanbean-api/ && bash deploy-tomcat.sh test
 
 after_success:
 # Deploy LeanBean API
