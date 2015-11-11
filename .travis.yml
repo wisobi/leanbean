@@ -47,8 +47,10 @@ after_deploy: true
 
 after_script:
 - docker stop leanbean-build
+- cd leanbean-docker
 - docker-compose stop
 - docker-compose rm -f
+- cd ..
 
 env:
   global:
