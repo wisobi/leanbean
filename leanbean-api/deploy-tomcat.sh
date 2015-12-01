@@ -5,7 +5,7 @@ if [ -z "$1" ]
   else
     case "$1" in
         "prod") echo "Deploying to environment prod."
-                URL="http://aws.asdf.com"
+                URL="http://api.leanbean.wisobi.com"
                 ;;
         "test") echo "Deploying to environment test."
                 URL="http://leanbean-proxy"
