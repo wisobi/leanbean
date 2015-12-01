@@ -1,6 +1,8 @@
 leanbean-proxy:
   container_name: leanbean-proxy
-  image: wisobi/leanbean-nginx
+  image: nginx
+  volumes:
+    - ./nginx/nginx.conf:/etc/nginx/nginx.conf
   ports:
     - "80:80"
   links:
@@ -12,4 +14,17 @@ leanbean-api:
    - leanbean-db
 leanbean-db:
   container_name: leanbean-db
+  image: mysql:5.6
+  volumes:
+   - ./mysql/my.cnf:/etc/mysql/conf.d/docker.cnf
+  volumes_from:
+   - leanbean-data
+  environment:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_USER: leanbean
+    MYSQL_PASSWORD: leanbean
+    MYSQL_DATABASE: leanbean
+leanbean-data:
+  container_name: leanbean-data
   image: wisobi/leanbean-mysql
+  command: /bin/true

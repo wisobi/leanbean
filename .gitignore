@@ -35,3 +35,6 @@ leanbean-google/src/main/resources/key.p12
 leanbean-mobile/platforms/*
 leanbean-mobile/plugins/*
 leanbean-mobile/leanbean.keystore
+
+# leanbean-build
+leanbean-docker/build/leanbean-*
