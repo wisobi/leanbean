@@ -36,6 +36,7 @@ after_success:
 - docker exec leanbean-build sh -c  "cd /opt/leanbean/leanbean-google && bash deploy-android.sh"
 
 after_failure:
+- docker exec leanbean-api sh -c "cat /usr/local/tomcat/logs/localhost_access_log.*.txt"
 - docker logs --tail=100 leanbean-proxy
 - docker logs --tail=100 leanbean-api
 - docker logs --tail=100 leanbean-db
