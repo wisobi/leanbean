@@ -23,8 +23,10 @@ install:
 
 before_script:
  # Deploy LeanBean API to test container
-- docker run -it -d --name leanbean-build wisobi/leanbean-build
+- docker run -d --name leanbean-build wisobi/leanbean-build
+- docker exec leanbean-api sh -c "cat /usr/local/tomcat/logs/localhost_access_log.*.txt"
 - docker exec leanbean-build sh -c 'cd /opt/leanbean/leanbean-api/ && bash deploy-tomcat.sh test'
+- docker exec leanbean-api sh -c "cat /usr/local/tomcat/logs/localhost_access_log.*.txt"
 
 script:
 - docker exec leanbean-build sh -c 'cd /opt/leanbean/ && bash test.sh leanbean-proxy'
