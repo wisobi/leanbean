@@ -25,11 +25,11 @@ before_script:
  # Deploy LeanBean API to test container
 - docker run -d --name leanbean-build wisobi/leanbean-build
 - docker exec leanbean-api sh -c "cat /usr/local/tomcat/logs/localhost_access_log.*.txt"
-- docker exec leanbean-build sh -c 'cd /opt/leanbean/leanbean-api/ && bash deploy-tomcat.sh test'
+- docker run leanbean-build sh -c 'cd /opt/leanbean/leanbean-api/ && bash deploy-tomcat.sh test'
 - docker exec leanbean-api sh -c "cat /usr/local/tomcat/logs/localhost_access_log.*.txt"
 
 script:
-- docker exec leanbean-build sh -c 'cd /opt/leanbean/ && bash test.sh leanbean-proxy'
+- docker run leanbean-build sh -c 'cd /opt/leanbean/ && bash test.sh leanbean-proxy'
 
 after_success:
 # Deploy LeanBean API
@@ -38,7 +38,7 @@ after_success:
 - docker exec leanbean-build sh -c  "cd /opt/leanbean/leanbean-google && bash deploy-android.sh"
 
 after_failure:
-- docker exec leanbean-api sh -c "cat /usr/local/tomcat/logs/localhost_access_log.*.txt"
+- docker run leanbean-api sh -c "cat /usr/local/tomcat/logs/localhost_access_log.*.txt"
 - docker logs --tail=100 leanbean-proxy
 - docker logs --tail=100 leanbean-api
 - docker logs --tail=100 leanbean-db
