@@ -5,17 +5,11 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.io.Serializable;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by bjork on 25/08/14.
@@ -29,6 +23,8 @@ public class Topic implements Serializable {
   private String title;
   private String pitch;
   private Meeting meeting;
+  private Date created;
+  private Date updated;
 
   public Topic() {
   }
@@ -85,6 +81,38 @@ public class Topic implements Serializable {
 
   public void setMeeting(Meeting meeting) {
     this.meeting = meeting;
+  }
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "created", nullable = false, updatable=false)
+  public Date getCreated() {
+    return created;
+  }
+
+  public void setCreated(Date created) {
+    this.created = created;
+  }
+
+  @Temporal(TemporalType.TIMESTAMP)
+  @Column(name = "updated", nullable = false)
+  public Date getUpdated() {
+    return updated;
+  }
+
+  public void setUpdated(Date updated) {
+    this.updated = updated;
+  }
+
+  @PrePersist
+  protected void onCreate() {
+    Date date = new Date();
+    setUpdated(date);
+    setCreated(date);
+  }
+
+  @PreUpdate
+  protected void onUpdate() {
+    setUpdated(new Date());
   }
 
 }

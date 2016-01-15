@@ -35,6 +35,12 @@ public class MeetingResource extends ServerResource {
   }
 
   public MeetingViewTO findMeetingById(long meetingId) {
+    if(meetingId < 0) {
+      // If the hash cannot be decoded to an integer, no need to check the database
+      getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+      throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);
+    }
+
     Meeting meeting = dao.findByMeetingId(meetingId);
     try {
       dao.close();
@@ -43,6 +49,8 @@ public class MeetingResource extends ServerResource {
     }
 
     if (meeting == null) {
+      // No meeting with decoded id found in the database
+      getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
       throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);
     }
     MeetingViewTO meetingViewTO = DAO2DTOMapper.mapMeeting(meeting);

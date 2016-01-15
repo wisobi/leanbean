@@ -1,10 +1,7 @@
 package com.wisobi.leanbean;
 
 import com.wisobi.leanbean.dto.DeviceTO;
-import com.wisobi.leanbean.jpa.entity.Meeting;
-import com.wisobi.leanbean.jpa.entity.Topic;
-import com.wisobi.leanbean.jpa.entity.Device;
-import com.wisobi.leanbean.jpa.entity.Vote;
+import com.wisobi.leanbean.jpa.entity.*;
 
 import java.util.List;
 
@@ -25,6 +22,7 @@ public interface LeanBeanDao {
   public void deleteTopic(Topic topic) throws IllegalArgumentException;
   public Device updateDevice(Device device) throws IllegalArgumentException;
   public Vote updateVote(Vote vote) throws IllegalArgumentException;
+  public void logJoinMeeting(EventJoinMeeting eventJoinMeeting);
   public void close() throws Exception;
 
 }

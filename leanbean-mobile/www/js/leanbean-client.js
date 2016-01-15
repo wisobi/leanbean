@@ -19,11 +19,7 @@ var leanbeanClient = {
                        if (successCallback) successCallback(deviceTO);
                    },
                    error: function (jqXHR, textStatus, errorThrown) {
-                       if (jqXHR.status == 400) {
-                           alert('Error postDevice: HTTP status ' + jqXHR.status);
-                       } else {
-                           alert('Error postDevice: HTTP status ' + jqXHR.status);
-                       }
+                       alert('Oops! Something went wrong when connecting to the server.');
                    }
                })
     },
@@ -42,14 +38,9 @@ var leanbeanClient = {
                    success: function (deviceTO) {
                        console.log("Successfully updated device.");
                        if (successCallback) successCallback(deviceTO);
-                       //leanbeanClient.login(deviceTO);
                    },
                    error: function (jqXHR, textStatus, errorThrown) {
-                       if (jqXHR.status == 400) {
-                           alert('Error putDevice: HTTP status ' + jqXHR.status);
-                       } else {
-                           alert('Error putDevice: HTTP status ' + jqXHR.status);
-                       }
+                       alert('Oops! Something went wrong when connecting to the server.');
                    }
                })
     },
@@ -66,13 +57,13 @@ var leanbeanClient = {
                    success: function (meetingTO) {
                        console.log("Successfully fetched meeting with id = " + meetingTO.id);
                        if (successCallback) successCallback(meetingTO);
-                       //leanbean._loadMeeting(meetingTO);
                    },
                    error: function (jqXHR, ajaxOptions, thrownError) {
                        if (jqXHR.status == 404) {
-                           alert('404: Could not find a Lean Coffee with ID ' + meetingId);
+                           alert('Oops! LeanBean could not find a meeting with id ' + meetingId + '.' +
+                           '\nNote that meeting ids are case-sensitive.');
                        } else {
-                           alert('Error _getMeeting: HTTP status ' + jqXHR.status);
+                           alert('Oops! Something went wrong when connecting to the server.');
                        }
                        if (errorCallback) errorCallback();
                    }
@@ -94,9 +85,9 @@ var leanbeanClient = {
             },
             error: function (jqXHR, ajaxOptions, thrownError) {
                 if (jqXHR.status == 404) {
-                    alert('404: Could not find meetings with activity from this device.');
+                    alert('Oops! LeanBean could not find meetings with activity from this device.');
                 } else {
-                    alert('Error _getMeeting: HTTP status ' + jqXHR.status);
+                    alert('Oops! Something went wrong when connecting to the server.');
                 }
                 if (errorCallback) errorCallback();
             }
@@ -119,11 +110,7 @@ var leanbeanClient = {
                        if(successCallback) successCallback(meetingTO);
                    },
                    error: function (jqXHR, textStatus, errorThrown) {
-                       if (jqXHR.status == 400) {
-                           alert('Error _postMeeting: HTTP status ' + jqXHR.status);
-                       } else {
-                           alert('Error _postMeeting: HTTP status ' + jqXHR.status);
-                       }
+                       alert('Oops! Something went wrong when connecting to the server.');
                    }
                })
     },
@@ -174,11 +161,7 @@ var leanbeanClient = {
                        console.log("Successfully deleted topic with id = " + topicId);
                    },
                    error: function (jqXHR, ajaxOptions, thrownError) {
-                       if (jqXHR.status == 404) {
-                           alert('Error deleteTopic: HTTP status ' + jqXHR.status);
-                       } else {
-                           alert('Error deleteTopic: HTTP status ' + jqXHR.status);
-                       }
+                       alert('Oops! Something went wrong when connecting to the server.');
                    }
                })
     },
@@ -199,9 +182,29 @@ var leanbeanClient = {
                            console.log('Error _getDevice: HTTP status ' + xhr.status);
                            if (errorCallback) errorCallback();
                        } else {
-                           alert('Error _getDevice: HTTP status ' + xhr.status);
+                           alert('Oops! Something went wrong when connecting to the server.');
                        }
 
+                   }
+               })
+    },
+
+    postEventJoinMeeting: function (event) {
+        var url = this._baseUrl + "events/join-meeting/";
+        $.ajax({
+                   headers: {
+                       'Accept': 'application/json; charset=utf-8',
+                       'Content-Type': 'application/json; charset=utf-8'
+                   },
+                   type: 'POST',
+                   url: url,
+                   datatype: 'json',
+                   data: JSON.stringify(event),
+                   success: function () {
+                       console.log("Successfully logged join-meeting event.");
+                   },
+                   error: function (xhr, ajaxOptions, thrownError) {
+                       console.log('Error postEventJoinMeeting: HTTP status ' + xhr.status);
                    }
                })
     }

@@ -21,7 +21,8 @@ $ docker run -d --name leanbean-db wisobi/leanbean-mysql
 $ docker run -d --name leanbean-api --link leanbean-db:leanbean-db wisobi/leanbean-tomcat
 $ docker run -d -p 80:80 --name leanbean-proxy --link leanbean-api:leanbean-api wisobi/leanbean-nginx
 $ docker run -it -d --name leanbean-dev --link leanbean-db:leanbean-db --link leanbean-api:leanbean-api -v ${HOME}/wisobi/leanbean:/opt/leanbean --privileged -v /dev/bus/usb:/dev/bus/usb wisobi/leanbean-dev
-$ docker run -it -d --name leanbean-dev --link leanbean-db:leanbean-db --link leanbean-api:leanbean-api -v ${HOME}/wisobi/leanbean:/opt/leanbean -v ${HOME}/.m2:/root/.m2 wisobi/leanbean-dev
+$ docker run -it -d --name leanbean-dev -v ${HOME}/wisobi/leanbean:/opt/leanbean -v ${HOME}/.m2/repository:/root/.m2/repository wisobi/leanbean-dev
+$ docker run -it -d --name leanbean-dev --link leanbean-db:leanbean-db --link leanbean-api:leanbean-api -v ${HOME}/wisobi/leanbean:/opt/leanbean -v ${HOME}/.m2/repository:/root/.m2/repository wisobi/leanbean-dev
 $ docker run -it -d --name leanbean-build --link leanbean-api:leanbean-api -v ${HOME}/wisobi/leanbean:/opt/leanbean -v ${HOME}/.m2:/root/.m2 wisobi/leanbean-build
 ```
 The development container links to both the database and application server containers. Two volumes are mounted, the first one is the directory containing the source code, so this needs to be updated accordingly to match your path. The second one mounts the USB devices which makes it possible to access mobile devices connected locally to the laptop.

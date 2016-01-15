@@ -2,11 +2,14 @@ var _ws;
 
 var leanbean = {
 
+    // TODO: _elements not used?
     _elements: {
         joinMeetingId: document.querySelector('#join-meeting-id'),
         meetingHeader: document.querySelector('#meeting-header'),
         topicsContainer: document.querySelector('#topics-container')
     },
+
+    _cordovaDevice: {},
 
     // LeanBean Constructor
     init: function () {
@@ -23,6 +26,7 @@ var leanbean = {
         $(document).on('click', '#meeting-topic-delete-button', this._meetingTopicDeleteConfirm.bind(this));
         $(document).on('change', '#meeting-facilitate-checkbox', this._meetingFacilitateCheckboxChange.bind(this));
         $(document).on("pagecontainerbeforeshow", this._pageContainerBeforeShow.bind(this));
+        $(document).on('keypress', this._keyPress.bind(this));
     },
 
     // Static Event Handlers
@@ -90,10 +94,29 @@ var leanbean = {
         this._getAndLoadMeeting();
     },
 
+    /**
+     * Listens for key presses and associates enter key with button clicks.
+     * @param
+     */
+    _keyPress: function (event) {
+        if(event.which === 13) {
+            event.preventDefault();
+            if (event.target.id === 'home-meeting-join-id') {
+                this._homeMeetingJoinButtonClick();
+            } else if(event.target.id === 'home-settings-alias') {
+                this._homeSettingsAliasButtonClick();
+            } else if(event.target.id === 'home-meeting-add-title') {
+                this._homeMeetingAddButtonClick();
+            }
+        }
+    },
+
     _homeMeetingAddButtonClick: function (event) {
         var meetingForm = this._formDataToJSON('#home-meeting-add-form');
         meetingForm.deviceId = this._getSetting("device").id;
-        leanbeanClient.postMeeting(meetingForm, leanbean._loadMeeting.bind(this));
+        leanbeanClient.postMeeting(meetingForm, leanbean._joinMeeting.bind(this));
+        // Clear form data
+        document.querySelector('#home-meeting-add-form').reset();
         // Change page to #meeting
         //$(":mobile-pagecontainer").pagecontainer("change", "#meeting");
     },
@@ -191,17 +214,38 @@ var leanbean = {
         var meetingId = this._getState().meetingId;
         this._setState("isFacilitator", false);
         console.log("meetingId = " + meetingId);
-        leanbeanClient.getMeeting(meetingId, leanbean._loadMeeting.bind(this));
+
+        // Get meeting information
+        leanbeanClient.getMeeting(meetingId, leanbean._joinMeeting.bind(this));
     },
 
-    // Used when LeanBean is triggered via Custom URL Scheme
+    // Used when LeanBean is triggered via Custom URL Scheme and from recent list
     getAndLoadMeeting: function(meetingId) {
         this._setState("meetingId", meetingId);
         this._getAndLoadMeeting();
     },
 
-    _loadMeeting: function (meeting) {
+    _joinMeeting: function(meeting) {
         this._addRecentMeetings(meeting);
+
+        // Emit event that user has joined a meeting
+        var eventTO = {};
+        eventTO.deviceId = this._getSetting("device").id;
+        eventTO.meetingId = meeting.id;
+        eventTO.cordova = _cordovaDevice.cordova;
+        eventTO.model = _cordovaDevice.model;
+        eventTO.platform = _cordovaDevice.platform;
+        eventTO.uuid = _cordovaDevice.uuid;
+        eventTO.version = _cordovaDevice.version;
+        eventTO.manufacturer = _cordovaDevice.manufacturer;
+        eventTO.virtual = _cordovaDevice.isVirtual;
+        eventTO.serial = _cordovaDevice.serial;
+        leanbeanClient.postEventJoinMeeting(eventTO);
+
+        this._loadMeeting(meeting);
+    },
+
+    _loadMeeting: function (meeting) {
 
         console.log("_loadMeeting(): loading meeting with id " + meeting.id);
         document.querySelector('#meeting-header-text').innerHTML = meeting.title;
@@ -327,25 +371,38 @@ var leanbean = {
     _loadRecentMeetings: function(meetings) {
         document.querySelector('#home-meeting-recent').innerHTML = ' <h2>Recent Meetings</h2>';
         var meeting;
-        var recentDivs = document.createElement('div');
+
         if($.isEmptyObject(meetings)) {
-            $(recentDivs).html("No recent meetings");
+            document.querySelector('#home-meeting-recent').append("No recent meetings");
         } else {
+            var recentList = document.createElement('ul');
+            $(recentList).attr("data-role", "listview")
+                .attr('id', 'home-meeting-recent-list');
             for (var i = meetings.length - 1; i >= 0; i--) {
                 meeting = meetings[i];
-                var recentDiv = document.createElement('div');
-                $(recentDiv).html('<p>' + meeting.title + ' (' + meeting.id +')</p>')
-                    .attr("id", "home-meeting-recent-" + meeting.id);
-                $(recentDivs).append(recentDiv);
+                var recentLink = document.createElement('a');
+                $(recentLink).attr('href', '#')
+                    .attr('onClick', "leanbean.getAndLoadMeeting('" + meeting.id + "'); return false;")
+                    .html(meeting.title  + ' (' + meeting.id +')');
+
+                var recentItem = document.createElement('li');
+                recentItem.appendChild(recentLink);
+                recentList.appendChild(recentItem);
             }
         }
-        document.querySelector('#home-meeting-recent').appendChild(recentDivs);
+        document.querySelector('#home-meeting-recent').appendChild(recentList);
+        $(document.querySelector('#home-meeting-recent-list')).listview().listview('refresh');
     },
 
     // Utility functions
 
-    login: function (device) {
+    login: function () {
+        var device = _cordovaDevice;
         leanbeanClient._getDevice(device.uuid, leanbean._handleLoginExistingDevice, leanbean._handleLoginNewDevice);
+    },
+
+    setCordovaDevice: function(device) {
+        _cordovaDevice = device;
     },
 
     _handleLoginExistingDevice: function(device) {
@@ -428,14 +485,16 @@ var leanbean = {
 
         if(index != null) {
             // Meeting is in stack, move it the top
-            var oldTop = recentMeetings[0];
             recentMeetings.splice(index, 1);
             recentMeetings.push(meeting);
 
         } else {
             // Meeting not in stack, add it to top and crop stack
             recentMeetings.push(meeting);
-            recentMeetings.splice(5);
+            while(recentMeetings.length > 5) {
+                recentMeetings.splice(0, 1);
+            }
+
         }
         this._setState("recentMeetings", recentMeetings);
     }

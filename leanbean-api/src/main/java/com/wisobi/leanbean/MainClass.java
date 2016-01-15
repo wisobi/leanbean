@@ -12,6 +12,8 @@ public class MainClass {
 
   public static void main(String[] args) {
     long[] ids = {1, 2, 3, 4, 5, 6, 7};
+      System.out.println(LeanBeanUtil.idDecode("dG"));
+      System.out.println(LeanBeanUtil.idDecode("Asdf"));
 
     System.out.println(Arrays.toString(ids));
     System.out.println(MainClass.arrayToString(ids));
@@ -35,7 +37,14 @@ public class MainClass {
         if(x == 7) {
             break;
         }
+        if(hash.equals("Asdf")) {
+            System.out.println(i + " " + hash + " " + hashids.decode(hash)[0]);
+        }
     }
+      for(int i = 68921; i < 69000; i++) {
+          String hash = hashids.encode(i);
+          System.out.println(i + " " + hash + " " + hashids.decode(hash)[0]);
+      }
   }
 
     private static void shuffleArray(char[] array)

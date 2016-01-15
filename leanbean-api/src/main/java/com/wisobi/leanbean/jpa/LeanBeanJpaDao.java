@@ -1,10 +1,7 @@
 package com.wisobi.leanbean.jpa;
 
 import com.wisobi.leanbean.LeanBeanDao;
-import com.wisobi.leanbean.jpa.entity.Meeting;
-import com.wisobi.leanbean.jpa.entity.Topic;
-import com.wisobi.leanbean.jpa.entity.Device;
-import com.wisobi.leanbean.jpa.entity.Vote;
+import com.wisobi.leanbean.jpa.entity.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -262,5 +259,17 @@ order by m.id desc
         em.getTransaction().commit();
 
         return returnDevice;
+    }
+
+    @Override
+    public void logJoinMeeting(EventJoinMeeting eventJoinMeeting) {
+        try {
+            em.getTransaction().begin();
+            em.persist(eventJoinMeeting);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            // Only log error, fire and forget
+            logger.debug(e.getMessage());
+        }
     }
 }

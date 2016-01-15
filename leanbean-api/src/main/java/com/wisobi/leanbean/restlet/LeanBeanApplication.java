@@ -1,5 +1,6 @@
 package com.wisobi.leanbean.restlet;
 
+import com.wisobi.leanbean.jpa.entity.EventJoinMeeting;
 import com.wisobi.leanbean.restlet.resource.*;
 
 import org.restlet.Application;
@@ -28,7 +29,7 @@ public class LeanBeanApplication extends Application {
     router.attach("/v1/device-uuid/{device-uuid}", DeviceUUIDResource.class);
     router.attach("/v1/topics/", TopicResource.class);
     router.attach("/v1/topics/{topic-id}", TopicResource.class);
-
+    router.attach("/v1/events/join-meeting/", EventJoinMeetingResource.class);
     router.attach("/v1/bootstrap", LeanBeanBootstrap.class);
     return router;
   }

@@ -1,10 +1,7 @@
 package com.wisobi.leanbean;
 
 import com.wisobi.leanbean.jpa.LeanBeanJpaDao;
-import com.wisobi.leanbean.jpa.entity.Meeting;
-import com.wisobi.leanbean.jpa.entity.Topic;
-import com.wisobi.leanbean.jpa.entity.Device;
-import com.wisobi.leanbean.jpa.entity.Vote;
+import com.wisobi.leanbean.jpa.entity.*;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -102,11 +99,25 @@ public class LeanBeanDaoTest {
     dao.addTopic(topic6);
 
     // Votes for meeting 1
-    logger.debug("Help: meeting1.getId() = " + meeting1.getId());
     Vote vote1 = new Vote(device1, meeting1, "1,2");
     dao.addVote(vote1);
     Vote vote2 = new Vote(device2, meeting1, "2,3");
     dao.addVote(vote2);
+
+    // Log a join-meeting event
+    EventJoinMeeting event = new EventJoinMeeting();
+    event.setDeviceId(1);
+    event.setMeetingId(1);
+    event.setModel("Nexus 5X");
+    event.setCordova("4.1.1");
+    event.setPlatform("Android");
+    event.setUuid("23ba7d20772aae12");
+    event.setVersion("23ba7d20772aae12");
+    event.setManufacturer("LGE");
+    event.setVirtual(false);
+    event.setSerial("00a63aa27980cea2");
+
+    dao.logJoinMeeting(event);
 
   }
 
@@ -360,6 +371,18 @@ public class LeanBeanDaoTest {
     for(Meeting meeting : meetings) {
         System.out.println(meeting.getId());
     }
+  }
+
+  @Test
+  public void testFindByMeetingId() {
+    Meeting meeting = dao.findByMeetingId(1);
+    assertEquals(meeting.getId(), 1);
+  }
+
+  @Test
+  public void testFindByMeetingIdNonExisting() {
+    Meeting meeting = dao.findByMeetingId(1000);
+    assertNull(meeting);
   }
 
 }

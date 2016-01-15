@@ -1,8 +1,10 @@
 package com.wisobi.leanbean;
 
 import com.wisobi.leanbean.dto.DTO2DAOMapper;
+import com.wisobi.leanbean.dto.EventJoinMeetingTO;
 import com.wisobi.leanbean.dto.MeetingTO;
 import com.wisobi.leanbean.dto.TopicTO;
+import com.wisobi.leanbean.jpa.entity.EventJoinMeeting;
 import com.wisobi.leanbean.jpa.entity.Meeting;
 import com.wisobi.leanbean.jpa.entity.Topic;
 
@@ -69,6 +71,22 @@ public class DTO2DAOMapperTest {
     assertEquals(pitch, topic.getPitch());
     assertEquals(deviceId, topic.getDevice().getId());
     assertEquals(meetingId, topic.getMeeting().getId());
+  }
+
+  @Test
+  public void testMapEventJoinMeeting() {
+
+    long id = 1;
+    // TODO: test all properties
+
+    EventJoinMeetingTO eventTO = new EventJoinMeetingTO();
+    eventTO.setId(id);
+
+
+    EventJoinMeeting event = DTO2DAOMapper.mapEventJoinMeeting(eventTO);
+
+    assertEquals(id, event.getId());
+
   }
 
   @Test

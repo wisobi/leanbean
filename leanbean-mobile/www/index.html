@@ -46,9 +46,13 @@
         // Event handlers
         function onDeviceReady() {
             console.log(device);
-            leanbean.login(device);
+            leanbean.setCordovaDevice(device);
+            leanbean.login();
         }
 
+        /*
+         * Links such as leanbean://meeting?id=dG will auto join in LeanBean
+         */
         function handleOpenURL(url) {
             console.log("url = " + url);
             var search = url.split('?')[1];
